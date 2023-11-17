@@ -1,3 +1,5 @@
+import '../components/cliente/css/cssClienteview.css'
+
 export const Home = () => {
    return (
       <>
