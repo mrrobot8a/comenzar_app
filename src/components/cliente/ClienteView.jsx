@@ -20,7 +20,7 @@ export const ClienteView = () => {
         e.preventDefault();
         // Lógica de manejo de la consulta
         console.log("Consulta realizada");
-        // Aquí puedes agregar lógica adicional para manejar la consulta
+        
     };
 
     return (
