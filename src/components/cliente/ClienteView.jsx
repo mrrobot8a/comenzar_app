@@ -20,14 +20,14 @@ export const ClienteView = () => {
         e.preventDefault();
         // Lógica de manejo de la consulta
         console.log("Consulta realizada");
-        
+
     };
 
     return (
         <>
-            <section className="background-radial-gradient overflow-hidden vh-100">
-                <div className="container-fluid d-flex align-items-center justify-content-center"> {/* new contenido */}
-                    <div className="container_formulario_request ">
+            <section className="background-radial-gradient overflow-lg-hidden vh-150">
+                <div className="container-fluid d-flex align-items-center justify-content-center overflow-auto"> {/* new contenido */}
+                    <div className="container_formulario_request mb-4 mb-sm-O ">
                         <div className="container_formulario_text">
 
                             <div className="text_info d-none d-lg-block">
@@ -40,7 +40,7 @@ export const ClienteView = () => {
                                 </p>
                             </div>
 
-                            <div className="col-lg-6 mb-5 mb-lg-0 mt-lg-3 mt-4">
+                            <div className="col-lg-6 col-12 mb-5 mb-lg-0 mt-lg-3 mt-4">
                                 <div id="radius-shape-1" className="position-absolute shadow-8-strong d-none d-lg-block"></div>
                                 <div id="radius-shape-2" className="position-absolute shadow-8-strong d-none d-lg-block"></div>
                                 <div className="card bg-glass custom-form mt-5" style={{ borderRadius: '26px' }}>
@@ -54,6 +54,34 @@ export const ClienteView = () => {
                                                         <label className="form-label" htmlFor="form3Example6">Nombre Cliente</label>
                                                         <input type="password" id="form3Example6" className="form-control" placeholder="Name" />
 
+                                                    </div>
+                                                    <div className="row">
+                                                        <div className="col-md-6 mb-4">
+                                                            <div className="form-outline">
+                                                                <label className="form-label" htmlFor="form3Example1">Teléfono</label>
+                                                                <input type="text" id="form3Example1" className="form-control" placeholder="# Celular" />
+                                                            </div>
+                                                        </div>
+                                                        <div className="col-md-6 mb-4">
+                                                            <div className="form-outline">
+                                                                <label className="form-label" htmlFor="form3Example2">Dirección</label>
+                                                                <input type="text" id="form3Example2" className="form-control" placeholder="Calle #" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="row">
+                                                        <div className="col-md-6 mb-4">
+                                                            <div className="form-outline">
+                                                                <label className="form-label" htmlFor="form3Example1">Teléfono</label>
+                                                                <input type="text" id="form3Example1" className="form-control" placeholder="# Celular" />
+                                                            </div>
+                                                        </div>
+                                                        <div className="col-md-6 mb-4">
+                                                            <div className="form-outline">
+                                                                <label className="form-label" htmlFor="form3Example2">Dirección</label>
+                                                                <input type="text" id="form3Example2" className="form-control" placeholder="Calle #" />
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div className="row">
                                                         <div className="col-md-6 mb-4">
@@ -117,9 +145,16 @@ export const ClienteView = () => {
                                                         <label className="form-label" htmlFor="form3Example5">Dirección de correo electrónico</label>
                                                     </div>
 
-                                                    <div className="containerbtnIniciar">
-                                                        <input type="submit" value="Registrar" />
-                                                        <input type="submit" value="Consultar" onClick={handleConsult} />
+                                                    <div className="row justify-content-around ">
+                                                        <div className="col-12 col-sm-4 d-flex justify-content-center">
+                                                            <input className="btn btn-success btn-lg mb-2" type="submit" value="Registrar" />
+                                                        </div>
+                                                        <div className="col-12 col-sm-4 d-flex justify-content-center">
+                                                            <input className="btn btn-danger btn-lg mb-2" type="button" value="Eliminar" />
+                                                        </div>
+                                                        <div className="col-12 col-sm-4 d-flex justify-content-center">
+                                                            <input className="btn btn-primary btn-lg mb-2" type="button" value="Consultar" onClick={handleConsult} />
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

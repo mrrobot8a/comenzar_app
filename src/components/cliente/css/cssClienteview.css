@@ -4,10 +4,6 @@
     height: 1.5rem;
 }
 
-html, body {
-    overflow-y: auto;
-    height: 100%;
-}
 .background-radial-gradient {
     background-color: hsl(218, 41%, 15%);
     background-image: radial-gradient(100% 100% circle at 50% 0%,
@@ -26,24 +22,7 @@ html, body {
 
 
 
-/* Estilos para el botón "Iniciar" */
-input[type="submit"] {
-    background-color: #4CAF50;
-    /* Color de fondo */
-    color: white;
-    /* Color del texto */
-    padding: 10px 20px;
-    /* Espaciado interno */
-    border: none;
-    /* Sin borde */
-    border-radius: 5px;
-    /* Bordes redondeados */
-    cursor: pointer;
-    /* Cambia el cursor al pasar sobre el botón */
-    font-size: 16px;
-    /* Tamaño de fuente */
-    margin: 10px;
-}
+
 
 /* Estilos adicionales cuando el cursor pasa sobre el botón */
 input[type="submit"]:hover {
@@ -83,7 +62,7 @@ input[type="submit"]:hover {
 }
 
 .containerbtnIniciar {
-    width: 100%;
+    width: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
