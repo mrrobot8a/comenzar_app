@@ -63,7 +63,7 @@ export const Clientes = () => {
             user_id: user.id
         }
 
-        const URL = mode == 'create' ? 'http://localhost:8000/api/clientes/store' : `http://localhost:8000/api/clientes/update/${searchRef.current.value}`;
+        const URL = mode == 'create' ? 'http://localhost:8000/api/clientes/store' : `http://localhost:8000/api/clientes/update/${clienteFound.numero_documento}`;
 
         fetch(URL, {
             method: mode == 'create' ? 'POST' : 'PUT',
@@ -89,6 +89,11 @@ export const Clientes = () => {
             alertRef.current.classList.remove('d-none', 'alert-danger');
             alertRef.current.classList.add('alert-info', 'd-block');
             alertRef.current.textContent = data.message;
+
+            if(mode == 'edit'){
+                setClienteFound(null);
+                setMode('create');
+            }
             
             // Desplazarse al inicio de la vista
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -110,11 +115,11 @@ export const Clientes = () => {
         emailRef.current.value = '';
         telefonoRef.current.value = '';
         direccionRef.current.value = '';
-        fechaNacimientoRef.current.value = '';
         hijosRef.current.value = '';
         numeroDocumentoRef.current.value = '';
         mascotasRef.current.checked = false;
         searchRef.current.value = '';
+        fechaNacimientoRef.current.value = null;
     }
 
     function handleSearchCliente(e) {
@@ -130,12 +135,23 @@ export const Clientes = () => {
             }
         }).then(res => res.json()).then(data => {
 
+            setMode('create');
+
             if(data.success == false){
                 setClienteFound(null);
+                alertRef.current.classList.remove('d-none', 'alert-info');
+                alertRef.current.classList.add('alert-danger', 'd-block');
+                alertRef.current.textContent = data.message;
                 return;
             }
 
+            alertRef.current.classList.add('d-none', 'alert-info');
+            alertRef.current.classList.remove('alert-danger', 'd-block');
+            alertRef.current.textContent = data.message;
+
             setClienteFound(data.data);
+
+            cleanInputs();
         });
 
     }
@@ -152,6 +168,13 @@ export const Clientes = () => {
         fechaNacimientoRef.current.value = clienteFound.fecha_nacimiento;
         hijosRef.current.value = clienteFound.hijos;
         numeroDocumentoRef.current.value = clienteFound.numero_documento;
+    }
+
+    function handleCancelEdit()
+    {
+        setMode('create');
+        setClienteFound(null);
+        cleanInputs();
     }
 
     return (
@@ -238,7 +261,7 @@ export const Clientes = () => {
                     <div className="mb-3">
                         <label className="form-label">Tipo de documento</label>
                         <select name="" className="form-select" id="" ref={tipoDocumentoRef} required>
-                            {info && (
+                            {info && mode === 'create' && (
                                 info.tipoDocumentos.map((documento, index) => {
                                     return (
                                         <option key={index} value={documento.id}>{documento.nombre_tipo_documento}</option>
@@ -279,16 +302,7 @@ export const Clientes = () => {
                     </div>
                     <div className="mb-3">
                         <label className="form-label">Fecha de nacimiento</label>
-                        {
-                            mode === 'edit' && (
-                                <input type="date" className="form-control text-muted" ref={fechaNacimientoRef} value={new Date(clienteFound.fecha_nacimiento).toISOString().split('T')[0]} required/>
-                            )
-                        }
-                        {
-                            mode === 'create' && (
-                                <input type="date" className="form-control text-muted" ref={fechaNacimientoRef} required/>
-                            )
-                        }
+                        <input type="date" className="form-control text-muted" ref={fechaNacimientoRef} required/>
                     </div>
                     <div className="mb-3">
                         <label className="form-label">Número de hijos</label>
@@ -317,6 +331,11 @@ export const Clientes = () => {
                     </div>
 
                     <button type="submit" className="btn btn-primary d-block w-100 my-4">Guardar</button>
+                    {
+                        mode === 'edit' && (
+                            <button type="submit" className="btn btn-info d-block w-100 my-4" onClick={handleCancelEdit}>Cancelar edición</button>
+                        )
+                    }
                 </div>
             </form>
         </div>
