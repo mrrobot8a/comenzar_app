@@ -177,6 +177,30 @@ export const Clientes = () => {
         cleanInputs();
     }
 
+    function handleDestroy()
+    {
+        fetch(`http://localhost:8000/api/clientes/delete/${clienteFound.numero_documento}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+                
+            }
+        }).then(res => res.json()).then(data => {
+            
+            cleanInputs();
+            alertRef.current.classList.remove('d-none', 'alert-danger');
+            alertRef.current.classList.add('alert-info', 'd-block');
+            alertRef.current.textContent = data.message;
+            setClienteFound(null);
+            setMode('create');
+            setTimeout(() => {
+                alertRef.current.classList.add('d-none');
+            }, 3000);
+
+        });
+    }
+
     return (
         <>
         <div className="alert alert-info d-none" role="alert" ref={alertRef}></div>
@@ -226,7 +250,7 @@ export const Clientes = () => {
                         <td>{clienteFound.mascotas ? 'Si' : 'No'}</td>
                         <td className="d-flex gap-2">
                             <button className="btn btn-primary btn-sm" onClick={handleEditClient}>Editar</button>
-                            <button className="btn btn-danger btn-sm">Eliminar</button>
+                            <button className="btn btn-danger btn-sm" onClick={handleDestroy}>Eliminar</button>
                         </td>                        
                     </tr>
                 )}
