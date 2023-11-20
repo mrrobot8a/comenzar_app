@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 
 export const CustomInput = ({ labelPlaceholder, idInput, type, value }) => {
-  const [validCamposSoloTexto, setValueFieldInputText] = useState(value || '');
+  const [inputValue, setInputValue] = useState(value || '');
   const [mensajeError, setMensajeError] = useState('');
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
   useEffect(() => {
-    setValueFieldInputText(value || '');
+    setInputValue(value || '');
   }, [value]);
 
   // Validación de los campos
   const handleChange = (event) => {
-    const inputValue = event.target.value;
+    const newInputValue = event.target.value;
 
     // Expresión regular para permitir solo letras, espacios y evitar ciertos símbolos
     const regexPattern =
@@ -25,7 +25,7 @@ export const CustomInput = ({ labelPlaceholder, idInput, type, value }) => {
         ? /[^A-Za-zÑñÁáÉéÍíÓóÚú\s]/
         : /[^0-9]/;
 
-    if (regexPattern.test(inputValue)) {
+    if (regexPattern.test(newInputValue)) {
       // Si se ingresan caracteres no permitidos, muestra mensaje de error
       setMensajeError(
         type === 'text' ? 'Por favor, ingrese solo letras y espacios.' : 'Por favor, ingrese solo números'
@@ -34,7 +34,7 @@ export const CustomInput = ({ labelPlaceholder, idInput, type, value }) => {
     } else {
       // Para otros tipos de input o valores válidos, actualizar el valor y ocultar el mensaje de error
       setMensajeError('');
-      setValueFieldInputText(inputValue);
+      setInputValue(newInputValue);
       setTooltipVisible(false);
     }
   };
@@ -55,7 +55,7 @@ export const CustomInput = ({ labelPlaceholder, idInput, type, value }) => {
         className="form-control"
         placeholder={labelPlaceholder}
         title="Ingrese solo caracteres de texto"
-        value={validCamposSoloTexto}
+        value={inputValue}
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
