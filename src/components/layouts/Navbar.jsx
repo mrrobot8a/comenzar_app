@@ -63,8 +63,8 @@ export const Navbar = () => {
                                 </ul>
                             </li>
                         </ul>
-                        <div className="menuizque-container">
-                            <div className=" collapse navbar-collapse d-flex align-items-center" id="navbarNavDarkDropdown" style={{ marginLeft: '0px' }}>
+                        <div class="form-inline my-2 my-lg-0 mx-md-0 mx-lg-2">
+                            <div className=" collapse navbar-collapse d-flex align-items-center" id="navbarNavDarkDropdown" >
                                 <ul class="navbar-nav">
                                     <li className="nav-item dropdown ">
                                         <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -79,6 +79,7 @@ export const Navbar = () => {
                                 </ul>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
             </nav>

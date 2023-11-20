@@ -29,9 +29,9 @@ input[type="submit"]:hover {
     background-color: #dcdcdc;
     /* Cambia el color de fondo al pasar sobre el botón */
 }
-
+/* boton perfl */
 .menuizque-container{
-    margin-Left: -10px;
+    margin-right: 10px;
 }
 
 .container_formulario_request {
@@ -68,6 +68,16 @@ input[type="submit"]:hover {
     align-items: center;
 }
 
+.mensaje-error {
+    position: absolute;
+    top: -30px;
+    left: 0;
+    background-color: #ffcccc;
+    padding: 10px;
+    border: 1px solid #ff0000;
+    width: 100%;
+    box-sizing: border-box;
+  }
 
 
 
