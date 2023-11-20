@@ -1,0 +1,34 @@
+.navbar-brand img {
+    border-radius: 50%;
+    width: 90px;
+    height: 90px;
+    background-image: url(../../../img/crm.jpeg );
+    background-repeat: no-repeat;
+    /* para que no se repita */
+    background-size: contain;
+    /* la forma para que se adapte al contenedor*/
+    position: relative;
+    
+    margin-bottom: 0.7rem;
+}
+
+
+.nav-link img{
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    background-image: url(../../../img/crm.jpeg );
+    background-repeat: no-repeat;
+    /* para que no se repita */
+    background-size: cover;
+    /* la forma para que se adapte al contenedor*/
+    position: relative;
+    margin-bottom: 0.7rem;
+
+}
+
+
+.nav-item {
+    font-size: 1.25rem;
+
+}
