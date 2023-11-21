@@ -6,6 +6,9 @@ export const CustomInput = ({ labelPlaceholder, idInput, type, value }) => {
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
   useEffect(() => {
+    if(inputValue.length > 0) {
+      value='';
+    }
     setInputValue(value || '');
   }, [value]);
 
