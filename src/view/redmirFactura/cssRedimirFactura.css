@@ -39,10 +39,10 @@ input[type="submit"]:hover {
     height: 100%;
     width: 100%;
     display: flex;
-    padding-right: 20px;
+    padding-right: 1px;
     justify-content: center;
     align-items: center;
-    background-color: hsl(218, 41%, 15%);
+    background: hsl(218, 41%, 15%);
     overflow: hidden;
 }
 
@@ -154,16 +154,44 @@ span {
     background-color: #c1bcbc;
 }
 
+
 .btn-save {
     color: #FFFFFF;
     background-color: #4CAF50;
 }
+
 .btn-consultar {
     color: #ffffff;
     background-color: #63bbe8;
+    justify-content: baseline;
+
 }
+
 .btn-delete {
     color: #FFFFFF;
     background-color: #D32F2F;
+    
 }
 
+
+
+.table-alternate tr:nth-child(odd) {
+    background-color: #9ea3a8;
+}
+
+.table-alternate tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+.tituloTabla {
+    color: #ffffff;
+    text-align: right;
+}
+
+.labelsaldoporredimir{
+    color: #dcdcdc;
+    font-size: x-large;
+    text-align: right;
+    margin-right: 10px;
+   
+}

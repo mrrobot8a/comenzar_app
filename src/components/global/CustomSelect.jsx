@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export const CustomSelect = ({ options , onOtroProfesionChange }) => {
+export const CustomSelect = ({ options , onOtroProfesionChange, elementReferenced }) => {
     
     const [selectedValue, setSelectedValue] = useState('');
     const [showOtherInput, setShowOtherInput] = useState(false);
@@ -11,19 +11,13 @@ export const CustomSelect = ({ options , onOtroProfesionChange }) => {
         setShowOtherInput(selectedOption === 'Otraprofesion');
     };
 
-    // const handleOtroProfesionChangeLocal = (e) => {
-    //     const value = e.target.value;
-    //     // setOtroProfesionValue(value);
-    //     // Llama a la función de devolución de llamada del componente padre
-    //     onOtroProfesionChange(value);
-    //   };
-
     return (
         <>
             <select
                 value={selectedValue}
                 className="form-select"
                 onChange={handleProfessionChange}
+                ref={elementReferenced}
             >
                 {options.map((option,index) => (
                     <option key={index+1} value={option.value}>

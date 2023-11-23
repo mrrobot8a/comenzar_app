@@ -1,21 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
 
-export const CustomInput = ({ labelPlaceholder, idInput, type, value }) => {
-  const [inputValue, setInputValue] = useState(value || '');
+
+export const CustomInput = ({ labelPlaceholder, idInput, type, value, elementReferenced ,disabled}) => {
+  const [validCamposSoloTexto, setValueFieldInputText] = useState(value || '');
   const [mensajeError, setMensajeError] = useState('');
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
   useEffect(() => {
-    if(inputValue.length > 0) {
-      value='';
-    }
-    setInputValue(value || '');
+    setValueFieldInputText(value || '');
+
   }, [value]);
+  
+
+  // Agrega esta función para limpiar el campo
+  const clearInputField = () => {
+    setValueFieldInputText(value || '');
+  };
+
+  // Adjunta la función a la referencia
+  useEffect(() => {
+    if (elementReferenced && elementReferenced.current) {
+      elementReferenced.current.clearInputField = clearInputField;
+    }
+  }, [elementReferenced,value]);
+
+ 
 
   // Validación de los campos
   const handleChange = (event) => {
-    const newInputValue = event.target.value;
-
+    const inputValue = event.target.value;
+  console.log(inputValue);
     // Expresión regular para permitir solo letras, espacios y evitar ciertos símbolos
     const regexPattern =
       idInput === 'formDate'
@@ -28,26 +42,34 @@ export const CustomInput = ({ labelPlaceholder, idInput, type, value }) => {
         ? /[^A-Za-zÑñÁáÉéÍíÓóÚú\s]/
         : /[^0-9]/;
 
-    if (regexPattern.test(newInputValue)) {
+    
+
+    if (regexPattern.test(inputValue)) {
       // Si se ingresan caracteres no permitidos, muestra mensaje de error
       setMensajeError(
         type === 'text' ? 'Por favor, ingrese solo letras y espacios.' : 'Por favor, ingrese solo números'
       );
       setTooltipVisible(true);
+     
     } else {
       // Para otros tipos de input o valores válidos, actualizar el valor y ocultar el mensaje de error
       setMensajeError('');
-      setInputValue(newInputValue);
+      setValueFieldInputText(inputValue);
       setTooltipVisible(false);
-    }
+    } 
   };
+
+  
 
   const handleBlur = () => {
     setTooltipVisible(false);
+   
+
   };
 
   const handleFocus = () => {
     setTooltipVisible(true);
+   
   };
 
   return (
@@ -58,11 +80,13 @@ export const CustomInput = ({ labelPlaceholder, idInput, type, value }) => {
         className="form-control"
         placeholder={labelPlaceholder}
         title="Ingrese solo caracteres de texto"
-        value={inputValue}
+        value={validCamposSoloTexto}
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
+        ref={elementReferenced}
         required
+        disabled={disabled}
       />
       {mensajeError && tooltipVisible && (
         <div className="tooltip fade bs-tooltip-bottom show" role="tooltip">

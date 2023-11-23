@@ -3,7 +3,7 @@ import { CustomInput } from '../../components/global/CustomInput';
 import { CustomSelect } from '../../components/global/CustomSelect';
 import '../../components/cliente/css/cssClienteview.css';
 
-export const ClienteView = () => {
+export const FacturaView = () => {
     //
     const [profesiones, setProfesiones] = useState([]);
     const [tiposDocumentos, setTipoDocumentos] = useState([]);
@@ -17,41 +17,40 @@ export const ClienteView = () => {
     const tipoDocumentoRef = useRef();
     const nombreRef = useRef();
     const apellidoRef = useRef();
-    const emailRef = useRef();
-    const telefonoRef = useRef();
-    const direccionRef = useRef();
-    const fechaNacimientoRef = useRef();
-    const hijosRef = useRef();
     const numeroDocumentoRef = useRef();
-    const mascotasRef = useRef();
+
+
+    const tiendasRef = useRef();
+    const campañasRef = useRef();
+    const valorFacturaRef = useRef();
+    const numero_factura = useRef();
+
     //
     const alertRef = useRef();
 
     // const user = JSON.parse(localStorage.getItem('user'));
-    
+
     //metodo crear cliente
     function handleSubmit(e) {
 
         e.preventDefault();
 
-        const cliente = {
-            profesion_id: profesionRef.current.value,
-            tipo_documento_id: tipoDocumentoRef.current.value,
-            nombre: nombreRef.current.value,
-            apellidos: apellidoRef.current.value,
-            email: emailRef.current.value,
-            telefono: telefonoRef.current.value,
-            direccion: direccionRef.current.value,
-            fecha_nacimiento: fechaNacimientoRef.current.value,
-            hijos: hijosRef.current.value,
-            numero_documento: numeroDocumentoRef.current.value,
-            mascotas: mascotasRef.current.value,
-            user_id: 1
+        const factura = {
+            cliente_id: clienteFound.id,
+            tienda_id: 1,
+            campaña_id: 1,
+            numero_factura: numero_factura.current.value + tiendasRef.current.value,
+            redimido_status: true,
+            valor_factura: valorFacturaRef.current.value,
+            foto_factura: "foto_factura.jpg",
+
+            saldo_factura_por_redimir: 123,
+            user_id: 1,
         }
 
-        console.log(cliente)
+        console.log(factura);
 
-        const URL = mode == 'create' ? 'http://localhost:8000/api/clientes/store' : `http://localhost:8000/api/clientes/update/${clienteFound.numero_documento}`;
+        const URL = mode == 'create' ? 'http://localhost:8000/api/factura/store' : `http://localhost:8000/api/clientes/update/${clienteFound.numero_documento}`;
 
         fetch(URL, {
             method: mode == 'create' ? 'POST' : 'PUT',
@@ -60,29 +59,29 @@ export const ClienteView = () => {
                 'Authorization': `Bearer ${token}`
 
             },
-            body: JSON.stringify(cliente)
+            body: JSON.stringify(factura)
         }).then(res => res.json()).then(data => {
 
             if (!data.success) {
 
                 alertRef.current.classList.remove('d-none', 'alert-info');
                 alertRef.current.classList.add('alert-danger');
-                alertRef.current.textContent = "Los datos introducidos son incorrectos, por favor verificarlos";
+                alertRef.current.textContent = data.message;
                 // Desplazarse al inicio de la vista
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 return;
 
             }
-            
+
 
             alertRef.current.classList.remove('d-none', 'alert-danger');
             alertRef.current.classList.add('alert-info', 'd-block');
             alertRef.current.textContent = data.message;
 
-            
-           
+
+
             setMode('create');
-            
+
 
             // Desplazarse al inicio de la vista
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -105,8 +104,8 @@ export const ClienteView = () => {
     function handleSearchCliente(e) {
 
         e.preventDefault();
- 
-      
+
+
 
         console.log(numeroDocumentoRef.current.value);
         fetch(`http://localhost:8000/api/clientes/show/${numeroDocumentoRef.current.value}`, {
@@ -125,14 +124,13 @@ export const ClienteView = () => {
                 alertRef.current.classList.remove('d-none', 'alert-info');
                 alertRef.current.classList.add('alert-danger', 'd-block');
                 alertRef.current.textContent = data.message;
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-               
+
                 return;
             }
-            setMode('update')
+            setMode('create')
 
             // Desplazarse al inicio de la vista
-             window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
 
             alertRef.current.classList.add('d-none', 'alert-info');
             alertRef.current.classList.remove('alert-danger', 'd-block');
@@ -141,48 +139,13 @@ export const ClienteView = () => {
             console.log(data.data);
 
             setClienteFound(data.data);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
 
             // cleanInputs();
         });
 
     }
 
-    //metodo para eliminar un usuario
-    function handleDestroy()
-    {
-        if (clienteFound == null) {
-            // Desplazarse al inicio de la vista
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            alertRef.current.classList.remove('d-none', 'alert-danger');
-            alertRef.current.classList.add('alert-info', 'd-block');
-            alertRef.current.textContent = "Digite el numero de documento del cliente a eliminar";
-
-        }else{
-        fetch(`http://localhost:8000/api/clientes/delete/${clienteFound.numero_documento}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                // 'Authorization': `Bearer ${token}`
-                
-            }
-        }).then(res => res.json()).then(data => {
-            
-            cleanInputs();
-            alertRef.current.classList.remove('d-none', 'alert-danger');
-            alertRef.current.classList.add('alert-info', 'd-block');
-            alertRef.current.textContent = data.message;
-            setClienteFound(null);
-            setMode('create');
-            // Desplazarse al inicio de la vista
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setTimeout(() => {
-                alertRef.current.classList.add('d-none');
-            }, 3000);
-
-        });
-    }
-    }
+    
 
     /*metodo para obtener los datos de la api consultar profesiones , tipoDocumentos*/
     useEffect(() => {
@@ -221,40 +184,34 @@ export const ClienteView = () => {
     }, [])
 
 
-    function cleanInputs()
-    { 
+    function cleanInputs() {
         setClienteFound(null);
         nombreRef.current.value = '';
         apellidoRef.current.value = '';
-        emailRef.current.value = '';
-        telefonoRef.current.value = '';
-        direccionRef.current.value = '';
-        hijosRef.current.value = '';
         numeroDocumentoRef.current.value = '';
-        mascotasRef.current.value= '';
-        fechaNacimientoRef.current.value = null;
-
-        nombreRef.current.clearInputField();
-        apellidoRef.current.clearInputField();
-        numeroDocumentoRef.current.clearInputField();
-        emailRef.current.clearInputField();
-        telefonoRef.current.clearInputField();
-        direccionRef.current.clearInputField();
-        fechaNacimientoRef.current.clearInputField();
-        hijosRef.current.clearInputField();
-        numeroDocumentoRef.current.clearInputField();
-        mascotasRef.current.clearInputField();      
-
-
+        valorFacturaRef.current.value = '';
+        numero_factura.current.value = '';
+       
     }
 
+    // const handleClearFields = () => {
 
-    
+    //     nombreRef.current.clearFields(); // Llama al método clearFields del CustomInput
+    //     apellidoRef.current.clearFields();
+    //     numeroDocumentoRef.current.clearFields();
+    //     emailRef.current.clearFields();
+    //     telefonoRef.current.clearFields();
+    //     direccionRef.current.clearFields();
+    //     fechaNacimientoRef.current.clearFields();
+    //     hijosRef.current.clearFields();
+    //     numeroDocumentoRef.current.clearFields();
+    //     mascotasRef.current.clearFields();      
 
+    // };
 
     return (
         <>
-            
+
             <section className="background-radial-gradient overflow-lg-hidden vh-160">
                 <div className="container-fluid d-flex align-items-center justify-content-center overflow-auto">
                     <div className="container_formulario_request mb-4 mb-sm-O ">
@@ -263,7 +220,7 @@ export const ClienteView = () => {
                             <div className="text_info d-none d-lg-block">
                                 <h1 className="my-5 display-5 fw-bold ls-tight">
                                     CRM para Centros Comerciales <br />
-                                    <span style={{ color: 'hsl(218, 81%, 75%)' }}>Para Registrar tus Compras</span>
+                                    
                                 </h1>
                                 <p className="mb-4 opacity-70">
                                     {/* Texto opcional */}
@@ -277,7 +234,7 @@ export const ClienteView = () => {
 
                                 <div className="card bg-glass custom-form mt-5" style={{ borderRadius: '26px' }}>
                                     <div className="card-body px-4 py-4 px-md-5">
-                                        <h1 style={{ textAlign: 'center' }}>Registro Cliente</h1>
+                                        <h1 style={{ textAlign: 'center' }}>Registro Factura</h1>
                                         <form onSubmit={handleSubmit}>
                                             {/* formulario  */}
                                             <div className="form-row">
@@ -303,10 +260,10 @@ export const ClienteView = () => {
                                                                 </label>
                                                                 <CustomInput
                                                                     labelPlaceholder="N° 1231282"
-                                                                    idInput="formCelular"
+                                                                    idInput="formNumeroDocumento"
                                                                     type="tel"
                                                                     elementReferenced={numeroDocumentoRef}
-                                                                    value={clienteFound? clienteFound.numero_documento : ''}
+                                                                    value={clienteFound ? clienteFound.numeroDocumentoRef : ''}
                                                                 />
                                                             </div>
                                                         </div>
@@ -344,29 +301,44 @@ export const ClienteView = () => {
                                                     <div className="row">
                                                         <div className="col-md-6 mb-4">
                                                             <div className="form-outline">
-                                                                <label className="form-label" htmlFor="form3Example1">
-                                                                    Teléfono
+                                                                <label className="form-label" htmlFor="form3Example3">
+                                                                    campañas
                                                                 </label>
-                                                                <CustomInput
-                                                                    labelPlaceholder="# Celular"
-                                                                    idInput="formCelular"
-                                                                    type="tel"
-                                                                    elementReferenced={telefonoRef}
-                                                                    value={clienteFound ? clienteFound.telefono : ''}
+                                                                <CustomSelect
+                                                                    options={profesiones}
+                                                                    elementReferenced={campañasRef}
+                                                                    value={clienteFound ? clienteFound.profesion_id : ''}
                                                                 />
                                                             </div>
                                                         </div>
                                                         <div className="col-md-6 mb-4">
+                                                            <div className="form-group">
+                                                                <label className="form-label" htmlFor="form3Example4">
+                                                                    Tiendas
+                                                                </label>
+                                                                <CustomSelect
+                                                                    options={profesiones}
+                                                                    elementReferenced={tiendasRef}
+                                                                    value={clienteFound ? clienteFound.profesion_id : ''}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="row">
+
+                                                        <div className="col-md-12 lg-md-12 mb-4">
                                                             <div className="form-outline">
                                                                 <label className="form-label" htmlFor="form3Example1">
-                                                                    Correo electronico
+                                                                    numero factura
                                                                 </label>
                                                                 <CustomInput
-                                                                    labelPlaceholder="example@example.com"
-                                                                    idInput="formEmail"
-                                                                    type="email"
-                                                                    elementReferenced={emailRef}
-                                                                    value={clienteFound ? clienteFound.email : ''}
+                                                                    labelPlaceholder="#n°00921"
+                                                                    idInput="formNumerofactura"
+                                                                    type="tel"
+                                                                    elementReferenced={numero_factura}
+                                                                    value={clienteFound ? clienteFound.direccion : ''}
+                                                                   
                                                                 />
                                                             </div>
                                                         </div>
@@ -374,87 +346,30 @@ export const ClienteView = () => {
                                                     <div className="col-md-12 mb-4">
                                                         <div className="form-outline">
                                                             <label className="form-label" htmlFor="form3Example2">
-                                                                Dirección
+                                                                Valor factura
                                                             </label>
                                                             <CustomInput
-                                                                labelPlaceholder="example av.33 #23-34"
-                                                                idInput="formDireccion"
-                                                                type="text"
-                                                                elementReferenced={direccionRef}
-                                                                value={clienteFound ? clienteFound.direccion : ''}
+                                                                labelPlaceholder="example $12345"
+                                                                idInput="formValorFactura"
+                                                                type="tel"
+                                                                elementReferenced={valorFacturaRef}
+                                                                // value={clienteFound ? clienteFound.direccion : ''}
                                                             />
                                                         </div>
                                                     </div>
-                                                    <div className="row">
-                                                        <div className="col-md-6 mb-4">
-                                                            <div className="form-outline">
-                                                                <label className="form-label" htmlFor="form3Example1">
-                                                                    Numero de hijos
-                                                                </label>
-                                                                <CustomInput
-                                                                    labelPlaceholder="N°999"
-                                                                    idInput="formHijos"
-                                                                    type="tel"
-                                                                    elementReferenced={hijosRef}
-                                                                    value={clienteFound ? clienteFound.hijos : ''}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                        <div className="col-md-6 mb-4">
-                                                            <div className="form-outline">
-                                                                <label className="form-label" htmlFor="form3Example2">
-                                                                    Numero de mascotas
-                                                                </label>
-                                                                <CustomInput
-                                                                    labelPlaceholder="N°999"
-                                                                    idInput="formMascotas"
-                                                                    type="tel"
-                                                                    elementReferenced={mascotasRef} 
-                                                                    value={clienteFound ? clienteFound.mascotas : ''}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="row">
-                                                        <div className="col-md-6 mb-4">
-                                                            <div className="form-outline">
-                                                                <label className="form-label" htmlFor="form3Example3">
-                                                                    Fecha Nacimiento
-                                                                </label>
-                                                                <CustomInput
-                                                                    idInput="formDate"
-                                                                    type="date"
-                                                                    elementReferenced={fechaNacimientoRef}
-                                                                    value={clienteFound ? clienteFound.fecha_nacimiento : ''}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                        <div className="col-md-6 mb-4">
-                                                            <div className="form-group">
-                                                                <label className="form-label" htmlFor="form3Example4">
-                                                                    Profesión
-                                                                </label>
-                                                                <CustomSelect
-                                                                    options={profesiones}
-                                                                    elementReferenced={profesionRef}
-                                                                    value={clienteFound ? clienteFound.profesion_id : ''}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    </div>
+
+                                                   
                                                     <div className="row justify-content-around my-2">
-                                                        <div className="col-6 col-sm-3 d-flex justify-content-center">
+                                                        <div className="col-12 col-sm-3 d-flex justify-content-center">
                                                             <input className="btn-save btn-lg mb-2" type="submit" value="Registrar" />
                                                         </div>
-                                                        <div className="col-6 col-sm-3 d-flex justify-content-center">
+                                                        <div className="col-12 col-sm-3 d-flex justify-content-center">
                                                             <input className="btn-consultar btn-lg mb-2" type="button" value="Consultar" onClick={handleSearchCliente} />
                                                         </div>
-                                                        <div className="col-6 col-sm-3 d-flex justify-content-center">
+                                                        <div className="col-12 col-sm-3 d-flex justify-content-center">
                                                             <input className="btn-limpiar  btn-lg mb-2" type="button" value="limpiar" onClick={cleanInputs} />
                                                         </div>
-                                                        <div className="col-6 col-sm-3 d-flex justify-content-center">
-                                                            <input className="btn-delete btn-lg mb-2" type="button" value="Eliminar" onClick={handleDestroy} />
-                                                        </div>
+                                                        
                                                     </div>
                                                 </div>
                                             </div>
