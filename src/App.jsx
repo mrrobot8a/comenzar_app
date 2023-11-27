@@ -3,6 +3,8 @@ import { Navbar } from "./components/layouts/Navbar"
 import { Login } from "./components/Login"
 import { Home } from "./components/Home"
 import { useEffect, useState } from "react"
+import { Clientes } from "./components/Clientes"
+import { useEffect, useState } from "react"
 import { ClienteView } from "./view/cliente/ClienteView"
 import { CampañaView } from "./view/campaña/campañaView"
 import { FacturaView } from "./view/factura/FacturaView"
@@ -25,8 +27,8 @@ export const App = () => {
    }, []);
 
   return (
-    
     <div>
+      
       {
         !!userAuth && <Navbar/>
       }
