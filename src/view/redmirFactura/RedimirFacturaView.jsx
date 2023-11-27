@@ -274,7 +274,7 @@ export const RedimirFacturaView = () => {
 
             <div className="container_formulario_request ">
                 <div className="row  m-2">
-                    <h2 className="tituloTabla text-center mb-4 mt-4">SALDO ACTUAL DEL CLIENTE</h2>
+                    <h2 className="tituloTabla text-center mb-4 mt-4">REDIMIR FACTURA</h2>
 
 
                     <div className="alert alert-info d-none" role="alert" ref={alertRef}></div>
@@ -285,7 +285,7 @@ export const RedimirFacturaView = () => {
 
                         <div className="card bg-glass custom-form mt-5" style={{ borderRadius: '26px' }}>
                             <div className="card-body px-4 py-4 px-md-5">
-                                <h1 style={{ textAlign: 'center' }}>Redimir Factura</h1>
+                                <h1 style={{ textAlign: 'center' }}>Datos del cliente</h1>
                                 <form onSubmit={handleSubmit}>
                                     {/* formulario  */}
                                     <div className="form-row">
@@ -359,10 +359,10 @@ export const RedimirFacturaView = () => {
 
 
                                                 <div className="col-6 col-sm-3 col-lg-6 col-md-4 d-flex justify-content-center">
-                                                    <input className="btn-limpiar  btn-lg mb-3" type="button" value="redimir saldo" onClick={cleanInputs} />
+                                                    <input className="btn-limpiar  btn-lg mb-3" type="button" value="Redimir saldo" onClick={cleanInputs} />
                                                 </div>
                                                 <div className="col-6 col-sm-3 col-lg-6 col-md-12 d-flex justify-content-center">
-                                                    <input className="btn-delete btn-lg mb-2" type="button" value="imprimir ticket" onClick={handleDestroy} />
+                                                    <input className="btn-delete btn-lg mb-2" type="button" value="Imprimir ticket" onClick={handleDestroy} />
                                                 </div>
                                             </div>
                                         </div>
@@ -372,7 +372,7 @@ export const RedimirFacturaView = () => {
                         </div>
                     </div>
                     <div className="col-sm-12 col-md-12 col-lg-7 col-xl-7 col-12 mb-5 mb-lg-0 mt-lg-3 mt-4 px-4">
-                        <h2 className="tituloTabla text-center mb-4">FACTURAS DEL CLIENTE</h2>
+                        <h2 className="tituloTabla text-center mb-4">FACTURAS DEL CLIENTE POR REDIMIR</h2>
                         <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
                             <table class="table table-bordered table-alternate">
                                 <thead>
@@ -382,7 +382,6 @@ export const RedimirFacturaView = () => {
                                         <th scope="col">N° Facutra</th>
                                         <th scope="col">Fecha</th>
                                         <th scope="col">Valor Factura</th>
-                                        <th scope="col">Valor por redimir</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -392,14 +391,13 @@ export const RedimirFacturaView = () => {
                                         <td>021</td>
                                         <td>05/01/2023</td>
                                         <td>$200.000</td>
-                                        <td>$200.000</td>
+                                       
                                     </tr>
                                     <tr>
                                         <th scope="row">2</th>
                                         <td>Puma</td>
                                         <td>022</td>
                                         <td>01/01/2023</td>
-                                        <td>$200.000</td>
                                         <td>$200.000</td>
                                     </tr>
                                     <tr>
@@ -408,7 +406,7 @@ export const RedimirFacturaView = () => {
                                         <td>024</td>
                                         <td>05/07/2023</td>
                                         <td>$200.000</td>
-                                        <td>$200.000</td>
+                                       
                                     </tr>
                                     <tr>
                                         <th scope="row">2</th>
@@ -416,7 +414,7 @@ export const RedimirFacturaView = () => {
                                         <td>025</td>
                                         <td>05/02/2022</td>
                                         <td>$200.000</td>
-                                        <td>$100.000</td>
+                                       
                                     </tr>
                                     <tr>
                                         <th scope="row">1</th>
@@ -424,7 +422,7 @@ export const RedimirFacturaView = () => {
                                         <td>026</td>
                                         <td>09/25/2023</td>
                                         <td>$200.000</td>
-                                        <td>$100.000</td>
+                                     
                                     </tr>
                                     <tr>
                                         <th scope="row">2</th>
@@ -432,7 +430,7 @@ export const RedimirFacturaView = () => {
                                         <td>027</td>
                                         <td>05/14/2023</td>
                                         <td>$200.000</td>
-                                        <td>$100.000</td>
+                                      
                                     </tr>
                                     <tr>
                                         <th scope="row">1</th>
@@ -440,7 +438,7 @@ export const RedimirFacturaView = () => {
                                         <td>028</td>
                                         <td>12/01/2023</td>
                                         <td>$200.000</td>
-                                        <td>$200.000</td>
+                                       
                                     </tr>
                                     <tr>
                                         <th scope="row">2</th>
@@ -448,7 +446,7 @@ export const RedimirFacturaView = () => {
                                         <td>034</td>
                                         <td>24/08/2023</td>
                                         <td>$200.000</td>
-                                        <td>$100.000</td>
+                                       
                                     </tr>
                                     
                                     <tr>
@@ -457,17 +455,17 @@ export const RedimirFacturaView = () => {
                                         <td>056</td>
                                         <td>12/02/2023</td>
                                         <td>$200.000</td>
-                                        <td>$100.000</td>
+                                       
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
 
-                        <div className="row justify-content-end" id="row_table">
+                        <div className="row justify-content-center" id="row_table">
 
-                            <div className="col-md-8 col-lg-7 col-12 d-flex mb-4 mt-3 justify-content-end">
+                            <div className="col-md-8 col-lg-7 col-12 d-flex mb-4 mt-3 justify-content-center">
                                 <label className="labelsaldoporredimir text-sm-sm text-lg-lg" htmlFor="form3Example2">
-                                    Saldo por Redimir
+                                    Saldo por redimir
                                 </label>
                                 <div className="form-outline">
                                     <CustomInput

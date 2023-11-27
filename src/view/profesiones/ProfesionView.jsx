@@ -3,43 +3,55 @@ import { CustomInput } from '../../components/global/CustomInput';
 import { CustomSelect } from '../../components/global/CustomSelect';
 import '../../components/cliente/css/cssClienteview.css';
 
-export const CampañaView = () => {
+export const ProfesionView = () => {
     //
     const [profesiones, setProfesiones] = useState([]);
     const [tiposDocumentos, setTipoDocumentos] = useState([]);
-    
 
     const [clienteFound, setClienteFound] = useState(null);
 
     const [mode, setMode] = useState('create');
     //
     const token = localStorage.getItem('token');
-    const nombreCampaña = useRef();
-    const valorCampaña = useRef();
-    const fechaInicio = useRef();
-    const fechaCaducidad = useRef();
-    const campañaHabilitada = useRef();
-    
-
-    
+    const profesionRef = useRef();
+    const tipoDocumentoRef = useRef();
+    const nombreRef = useRef();
+    const apellidoRef = useRef();
+    const emailRef = useRef();
+    const telefonoRef = useRef();
+    const direccionRef = useRef();
+    const fechaNacimientoRef = useRef();
+    const hijosRef = useRef();
+    const numeroDocumentoRef = useRef();
+    const mascotasRef = useRef();
     //
     const alertRef = useRef();
 
     // const user = JSON.parse(localStorage.getItem('user'));
-
+    
     //metodo crear cliente
     function handleSubmit(e) {
 
         e.preventDefault();
 
-        const campaña = {
-            
+        const cliente = {
+            profesion_id: profesionRef.current.value,
+            tipo_documento_id: tipoDocumentoRef.current.value,
+            nombre: nombreRef.current.value,
+            apellidos: apellidoRef.current.value,
+            email: emailRef.current.value,
+            telefono: telefonoRef.current.value,
+            direccion: direccionRef.current.value,
+            fecha_nacimiento: fechaNacimientoRef.current.value,
+            hijos: hijosRef.current.value,
+            numero_documento: numeroDocumentoRef.current.value,
+            mascotas: mascotasRef.current.value,
             user_id: 1
         }
 
-        console.log(campaña)
+        console.log(cliente)
 
-        const URL = mode == 'create' ? 'http://localhost:8000/api/campaña/store' : `http://localhost:8000/api/clientes/update/${clienteFound.numero_documento}`;
+        const URL = mode == 'create' ? 'http://localhost:8000/api/clientes/store' : `http://localhost:8000/api/clientes/update/${clienteFound.numero_documento}`;
 
         fetch(URL, {
             method: mode == 'create' ? 'POST' : 'PUT',
@@ -48,7 +60,7 @@ export const CampañaView = () => {
                 'Authorization': `Bearer ${token}`
 
             },
-            body: JSON.stringify(campaña)
+            body: JSON.stringify(cliente)
         }).then(res => res.json()).then(data => {
 
             if (!data.success) {
@@ -61,16 +73,16 @@ export const CampañaView = () => {
                 return;
 
             }
-
+            
 
             alertRef.current.classList.remove('d-none', 'alert-danger');
             alertRef.current.classList.add('alert-info', 'd-block');
             alertRef.current.textContent = data.message;
 
-
-
+            
+           
             setMode('create');
-
+            
 
             // Desplazarse al inicio de la vista
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -93,12 +105,11 @@ export const CampañaView = () => {
     function handleSearchCliente(e) {
 
         e.preventDefault();
+ 
+      
 
-
-
-        console.log(nombreCampaña.current.value);
-
-        fetch(`http://localhost:8000/api/campaña/BuscarCampaña/${nombreCampaña.current.value}`, {
+        console.log(numeroDocumentoRef.current.value);
+        fetch(`http://localhost:8000/api/clientes/show/${numeroDocumentoRef.current.value}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -115,13 +126,13 @@ export const CampañaView = () => {
                 alertRef.current.classList.add('alert-danger', 'd-block');
                 alertRef.current.textContent = data.message;
                 window.scrollTo({ top: 0, behavior: 'smooth' });
-
+               
                 return;
             }
             setMode('update')
 
             // Desplazarse al inicio de la vista
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+             window.scrollTo({ top: 0, behavior: 'smooth' });
 
             alertRef.current.classList.add('d-none', 'alert-info');
             alertRef.current.classList.remove('alert-danger', 'd-block');
@@ -138,7 +149,8 @@ export const CampañaView = () => {
     }
 
     //metodo para eliminar un usuario
-    function handleDestroy() {
+    function handleDestroy()
+    {
         if (clienteFound == null) {
             // Desplazarse al inicio de la vista
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -146,30 +158,30 @@ export const CampañaView = () => {
             alertRef.current.classList.add('alert-info', 'd-block');
             alertRef.current.textContent = "Digite el numero de documento del cliente a eliminar";
 
-        } else {
-            fetch(`http://localhost:8000/api/clientes/delete/${clienteFound.numero_documento}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // 'Authorization': `Bearer ${token}`
+        }else{
+        fetch(`http://localhost:8000/api/clientes/delete/${clienteFound.numero_documento}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                // 'Authorization': `Bearer ${token}`
+                
+            }
+        }).then(res => res.json()).then(data => {
+            
+            cleanInputs();
+            alertRef.current.classList.remove('d-none', 'alert-danger');
+            alertRef.current.classList.add('alert-info', 'd-block');
+            alertRef.current.textContent = data.message;
+            setClienteFound(null);
+            setMode('create');
+            // Desplazarse al inicio de la vista
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => {
+                alertRef.current.classList.add('d-none');
+            }, 3000);
 
-                }
-            }).then(res => res.json()).then(data => {
-
-                cleanInputs();
-                alertRef.current.classList.remove('d-none', 'alert-danger');
-                alertRef.current.classList.add('alert-info', 'd-block');
-                alertRef.current.textContent = data.message;
-                setClienteFound(null);
-                setMode('create');
-                // Desplazarse al inicio de la vista
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                setTimeout(() => {
-                    alertRef.current.classList.add('d-none');
-                }, 3000);
-
-            });
-        }
+        });
+    }
     }
 
     /*metodo para obtener los datos de la api consultar profesiones , tipoDocumentos*/
@@ -185,36 +197,64 @@ export const CampañaView = () => {
             .then(res => res.json())
             .then(data => {
 
-            
-             
+                const profesiones = data.profesiones.map(profesion => {
+                    return {
+                        value: profesion.id,
+                        label: profesion.nombre_profesion
+                    }
+                })
+
+                const documentos = data.tipoDocumentos.map(tipoDocumento => {
+                    return {
+                        value: tipoDocumento.id,
+                        label: tipoDocumento.nombre_tipo_documento
+                    }
+                })
+
+                setProfesiones(profesiones);
+
+                setTipoDocumentos(documentos);
+
             }).catch(error => console.log(error));
 
 
     }, [])
 
 
-    function cleanInputs() {
+    function cleanInputs()
+    { 
         setClienteFound(null);
-        nombreCampaña.current.value = '';
-        valorCampaña.current.value = '';
-        fechaInicio.current.value = null;
-        fechaCaducidad.current.value = null;
-        campañaHabilitada.current.value = false;
-        
-        nombreCampaña.current.clearInputField();
-        valorCampaña.current.clearInputField();
-        fechaInicio.current.clearInputField();
-        fechaCaducidad.current.clearInputField();
-        campañaHabilitada.current.clearInputField();
+        nombreRef.current.value = '';
+        apellidoRef.current.value = '';
+        emailRef.current.value = '';
+        telefonoRef.current.value = '';
+        direccionRef.current.value = '';
+        hijosRef.current.value = '';
+        numeroDocumentoRef.current.value = '';
+        mascotasRef.current.value= '';
+        fechaNacimientoRef.current.value = null;
+
+        nombreRef.current.clearInputField();
+        apellidoRef.current.clearInputField();
+        numeroDocumentoRef.current.clearInputField();
+        emailRef.current.clearInputField();
+        telefonoRef.current.clearInputField();
+        direccionRef.current.clearInputField();
+        fechaNacimientoRef.current.clearInputField();
+        hijosRef.current.clearInputField();
+        numeroDocumentoRef.current.clearInputField();
+        mascotasRef.current.clearInputField();      
+
+
     }
 
 
-
+    
 
 
     return (
         <>
-
+            
             <section className="background-radial-gradient overflow-lg-hidden vh-100">
                 <div className="container-fluid d-flex align-items-center justify-content-center overflow-auto">
                     <div className="container_formulario_request mb-4 mb-sm-O ">
@@ -223,7 +263,7 @@ export const CampañaView = () => {
                             <div className="text_info d-none d-lg-block">
                                 <h1 className="my-5 display-5 fw-bold ls-tight">
                                     CRM para Centros Comerciales <br />
-
+                                    
                                 </h1>
                                 <p className="mb-4 opacity-70">
                                     {/* Texto opcional */}
@@ -237,92 +277,29 @@ export const CampañaView = () => {
 
                                 <div className="card bg-glass custom-form mt-5" style={{ borderRadius: '26px' }}>
                                     <div className="card-body px-4 py-4 px-md-5">
-                                        <h1 style={{ textAlign: 'center' }}>Registro Campaña</h1>
+                                        <h1 style={{ textAlign: 'center' }}>Registro Profesiones</h1>
                                         <form onSubmit={handleSubmit}>
                                             {/* formulario  */}
                                             <div className="form-row">
                                                 <div className="col-md-12 mb-4">
 
                                                     <div className="row">
-
-                                                        <div className="col-md-12 mb-2 mt-2">
+                                                        <div className="col-md-6 mb-4">
                                                             <div className="form-outline">
-                                                                <label className="form-label" htmlFor="form3Example3">
-                                                                    Nombre de la campaña
+                                                                <label className="form-label" htmlFor="form3Example1">
+                                                                    Nombre profesion
                                                                 </label>
                                                                 <CustomInput
-                                                                    labelPlaceholder="nombre campaña"
-                                                                    idInput="formNombreCampaña"
+                                                                    labelPlaceholder="Nombre cliente"
+                                                                    idInput="formNombre"
                                                                     type="text"
-                                                                    elementReferenced={nombreCampaña}
-                                                                    value={clienteFound ? clienteFound.numero_documento : ''}
+                                                                    elementReferenced={nombreRef}
+                                                                    value={clienteFound ? clienteFound.nombre : ''}
                                                                 />
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-md-12 mb-4">
-
-                                                    </div>
-
-                                                    <div className="row">
-
-                                                        <div className="col-md-6 mb-4">
-                                                            <div className="form-outline">
-                                                                <label className="form-label" htmlFor="form3Example2">
-                                                                    Valor del ticket
-                                                                </label>
-                                                                <CustomInput
-                                                                    labelPlaceholder="N°999"
-                                                                    idInput="formValorTicket"
-                                                                    type="tel"
-                                                                    elementReferenced={valorCampaña}
-                                                                    value={clienteFound ? clienteFound.mascotas : ''}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                        <div className="col-md-6 d-flex align-items-center flex-direction-column justify-content-left p-2">
-
-                                                            <label className="form-label m-2" htmlFor="form3Example1">
-                                                                campaña habilitada
-                                                            </label>
-                                                            <CustomInput
-                                                                className={"form-check-input"}
-                                                                idInput="formHijos"
-                                                                type="checkbox"
-                                                                elementReferenced={campañaHabilitada}
-                                                                value={clienteFound ? clienteFound.hijos : ''}
-                                                            />
-
-                                                        </div>
-                                                    </div>
-                                                    <div className="row">
-                                                        <div className="col-md-6 mb-4">
-                                                            <div className="form-outline">
-                                                                <label className="form-label" htmlFor="form3Example3">
-                                                                    Fecha de inicio
-                                                                </label>
-                                                                <CustomInput
-                                                                    idInput="formDate"
-                                                                    type="date"
-                                                                    elementReferenced={fechaInicio}
-                                                                    value={clienteFound ? clienteFound.fecha_nacimiento : ''}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                        <div className="col-md-6 mb-4">
-                                                            <div className="form-outline">
-                                                                <label className="form-label" htmlFor="form3Example3">
-                                                                    Fecha de caducidad
-                                                                </label>
-                                                                <CustomInput
-                                                                    idInput="formDate"
-                                                                    type="date"
-                                                                    elementReferenced={fechaCaducidad}
-                                                                    value={clienteFound ? clienteFound.fecha_nacimiento : ''}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                        </div>                                                       
+                                                    </div>                                                 
+                                                    
                                                     <div className="row justify-content-around my-2">
                                                         <div className="col-6 col-sm-3 d-flex justify-content-center">
                                                             <input className="btn-save btn-lg mb-2" type="submit" value="Registrar" />

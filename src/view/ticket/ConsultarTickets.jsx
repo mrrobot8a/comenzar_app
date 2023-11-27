@@ -281,7 +281,7 @@ export const ConsultarTickets = () => {
 
                         <div className="card bg-glass custom-form mt-5" style={{ borderRadius: '26px' }}>
                             <div className="card-body px-4 py-4 px-md-5">
-                                <h1 style={{ textAlign: 'center' }}>Tickets</h1>
+                                <h1 style={{ textAlign: 'center' }}>Datos del cliente </h1>
                                 <form onSubmit={handleSubmit}>
                                     {/* formulario  */}
                                     <div className="form-row">
@@ -348,6 +348,9 @@ export const ConsultarTickets = () => {
                                                 <div className="col-12 col-sm-3  col-md-4 col-lg-6 d-flex justify-content-center">
                                                     <input className="btn-consultar btn-lg mb-3" type="button" value="Consultar Tickets" onClick={handleSearchCliente} />
                                                 </div>
+                                                <div className="col-6 col-sm-3 col-lg-6 col-md-12 d-flex justify-content-center">
+                                                    <input className="btn-delete btn-lg mb-2" type="button" value="Imprimir" onClick={handleDestroy} />
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -363,95 +366,80 @@ export const ConsultarTickets = () => {
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col">N° Ticket</th>
-                                        <th scope="col">N° Facutra</th>
-                                        <th scope="col">Tienda</th>
                                         <th scope="col">Fecha</th>
-                                        <th scope="col">Valor Factura</th>
-                                        <th scope="col">Valor redimido</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <th scope="row">1</th>
                                         <td>025</td>
-                                        <td>0210</td>
-                                        <td>Koaj</td>
                                         <td>05/01/2023</td>
-                                        <td>$200.000</td>
-                                        <td>$200.000</td>
+                                       
                                     </tr>
                                     <tr>
                                         <th scope="row">2</th>
                                         <td>Puma</td>
-                                        <td>0255</td>
-                                        <td>022</td>
+                                        
+                                 
                                         <td>01/01/2023</td>
-                                        <td>$200.000</td>
-                                        <td>$200.000</td>
+                                      
                                     </tr>
                                     <tr>
                                         <th scope="row">3</th>
-                                        <td>Koaj</td>
+                                        
                                         <td>0271</td>
-                                        <td>024</td>
+                                       
                                         <td>05/07/2023</td>
-                                        <td>$200.000</td>
-                                        <td>$200.000</td>
+                                      
                                     </tr>
                                     <tr>
                                         <th scope="row">4</th>
-                                        <td>Adidas</td>
+                                        
                                         <td>02235</td>
-                                        <td>025</td>
+                                  
                                         <td>05/02/2022</td>
-                                        <td>$200.000</td>
-                                        <td>$100.000</td>
+                                      
                                     </tr>
                                     <tr>
                                         <th scope="row">5</th>
-                                        <td>Koaj</td>
+                                        
                                         <td>054</td>
-                                        <td>025</td>
+                                     
                                         <td>09/25/2023</td>
-                                        <td>$200.000</td>
-                                        <td>$100.000</td>
+                                    
                                     </tr>
                                     <tr>
                                         <th scope="row">6</th>
-                                        <td>arturo</td>
+                                    
                                         <td>02245</td>
-                                        <td>027</td>
+                                    
                                         <td>05/14/2023</td>
-                                        <td>$200.000</td>
-                                        <td>$100.000</td>
+                                     
                                     </tr>
                                     <tr>
                                         <th scope="row">7</th>
-                                        <td>Koaj</td>
+                                        
                                         <td>02551</td>
-                                        <td>028</td>
+                                      
                                         <td>12/01/2023</td>
-                                        <td>$200.000</td>
-                                        <td>$200.000</td>
+                               
                                     </tr>
                                     <tr>
                                         <th scope="row">8</th>
-                                        <td>arturo</td>
+                                    
                                         <td>35025</td>
-                                        <td>034</td>
+                                
                                         <td>24/08/2023</td>
-                                        <td>$200.000</td>
-                                        <td>$100.000</td>
+                                        
                                     </tr>
 
                                     <tr>
                                         <th scope="row">9</th>
-                                        <td>H&M</td>
+                                        
                                         <td>012325</td>
-                                        <td>056</td>
+                               
                                         <td>12/02/2023</td>
-                                        <td>$200.000</td>
-                                        <td>$100.000</td>
+                                        
                                     </tr>
                                 </tbody>
                             </table>
@@ -459,25 +447,10 @@ export const ConsultarTickets = () => {
 
                         <div className="row justify-content-end" id="row_table">
 
-                            <div className="col-md-8 col-lg-12 col-12 d-flex  justify-content-end mb-4 mt-3 ">
-                                <label className="labelsaldoporredimir text-sm-sm text-lg-lg" htmlFor="form3Example2">
-                                Valor Total Facturas Redimidas
-                                </label>
-                                <div className="form-outline">
-                                    <CustomInput
-                                        labelPlaceholder="Valor Total Facturas Redimidas"
-                                        idInput="formSaldoPorRedimir"
-                                        type="text"
-                                        elementReferenced={apellidoRef}
-                                        value={clienteFound ? clienteFound.apellidos : ''}
-                                        disabled={true}
-                                    />
-                                </div>
-                                
-                            </div>
+                           
                             <div className="col-md-8 col-lg-12 col-12 d-flex mb-4 mt-3 justify-content-end">
                                 <label className="labelsaldoporredimir text-sm-sm text-lg-lg" htmlFor="form3Example2">
-                                No de  Tickets Asignados
+                                    No de  Tickets Asignados
                                 </label>
                                 <div className="form-outline">
                                     <CustomInput

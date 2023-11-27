@@ -298,8 +298,7 @@ export const FacturaView = () => {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div className="row">
-                                                        <div className="col-md-6 mb-4">
+                                                    <div className="col-md-12 mb-4">
                                                             <div className="form-outline">
                                                                 <label className="form-label" htmlFor="form3Example3">
                                                                     campañas
@@ -311,8 +310,11 @@ export const FacturaView = () => {
                                                                 />
                                                             </div>
                                                         </div>
-                                                        <div className="col-md-6 mb-4">
-                                                            <div className="form-group">
+                                                    
+
+                                                   
+                                                    <div className="col-md-12 mb-4">
+                                                    <div className="form-group">
                                                                 <label className="form-label" htmlFor="form3Example4">
                                                                     Tiendas
                                                                 </label>
@@ -322,12 +324,13 @@ export const FacturaView = () => {
                                                                     value={clienteFound ? clienteFound.profesion_id : ''}
                                                                 />
                                                             </div>
-                                                        </div>
+                                                        
                                                     </div>
-
                                                     <div className="row">
+                                                    
+                                                 
 
-                                                        <div className="col-md-12 lg-md-12 mb-4">
+                                                    <div className="col-md-6 lg-md-12 mb-4">
                                                             <div className="form-outline">
                                                                 <label className="form-label" htmlFor="form3Example1">
                                                                     numero factura
@@ -342,9 +345,10 @@ export const FacturaView = () => {
                                                                 />
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div className="col-md-12 mb-4">
-                                                        <div className="form-outline">
+                                                        
+                                                        <div className="col-md-6 mb-4">
+                                                           
+                                                            <div className="form-outline">
                                                             <label className="form-label" htmlFor="form3Example2">
                                                                 Valor factura
                                                             </label>
@@ -356,7 +360,8 @@ export const FacturaView = () => {
                                                                 // value={clienteFound ? clienteFound.direccion : ''}
                                                             />
                                                         </div>
-                                                    </div>
+                                                        </div>
+                                                        </div>
 
                                                    
                                                     <div className="row justify-content-around my-2">

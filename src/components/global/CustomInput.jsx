@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
 
 
-export const CustomInput = ({ labelPlaceholder, idInput, type, value, elementReferenced ,disabled}) => {
+export const CustomInput = ({ className,labelPlaceholder, idInput, type, value, elementReferenced ,disabled}) => {
   const [validCamposSoloTexto, setValueFieldInputText] = useState(value || '');
   const [mensajeError, setMensajeError] = useState('');
   const [tooltipVisible, setTooltipVisible] = useState(false);
@@ -77,7 +77,7 @@ export const CustomInput = ({ labelPlaceholder, idInput, type, value, elementRef
       <input
         type={type}
         id={idInput}
-        className="form-control"
+        className= {className?className:"form-control"}
         placeholder={labelPlaceholder}
         title="Ingrese solo caracteres de texto"
         value={validCamposSoloTexto}

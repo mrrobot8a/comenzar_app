@@ -8,6 +8,9 @@ import { CampañaView } from "./view/campaña/campañaView"
 import { FacturaView } from "./view/factura/FacturaView"
 import { RedimirFacturaView } from "./view/redmirFactura/RedimirFacturaView"
 import { ConsultarTickets } from "./view/ticket/ConsultarTickets"
+import { ProfesionView } from "./view/profesiones/ProfesionView"
+import { TiendaView } from "./view/Tienda/TiendaView"
+import { DocumentoView } from "./view/documento/DocumentoView"
 
 
 export const App = () => {
@@ -38,6 +41,9 @@ export const App = () => {
           <Route path="/factura" element={<FacturaView/>}></Route>
           <Route path="/RedimirFactura" element={<RedimirFacturaView/>}></Route>
           <Route path="/ConstarTieckts" element={<ConsultarTickets/>}></Route>
+          <Route path="/Profesion" element={<ProfesionView/>}></Route>
+          <Route path="/Tienda" element={<TiendaView/>}></Route>
+          <Route path="/Documento" element={<DocumentoView/>}></Route>
           <Route path="*">"404 Not Found"</Route>
 
         </Routes>
