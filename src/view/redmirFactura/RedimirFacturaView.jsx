@@ -235,7 +235,7 @@ export const RedimirFacturaView = () => {
                 return;
             }
             setMode('update')
-            
+
 
             // Desplazarse al inicio de la vista
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -254,52 +254,44 @@ export const RedimirFacturaView = () => {
 
     }
 
-    //metodo para eliminar un usuario
-    function handleRedimir(e) {
-
+    // Método para redimir
+    async function handleRedimir(e) {
         e.preventDefault();
 
+        console.log('clienteFound:', clienteFound);
+        console.log('facturas:', facturas);
+
         const cliente = {
-
-            cliente_id: 1,
-            campaña_id: 1
-
-        }
-
-        console.log(clienteFound.cliente_id)
+            cliente_id: clienteFound.id,
+            campaña_id: facturas[0].campaña_id,
+        };
 
         console.log(cliente);
 
+        try {
+            const response = await fetch('http://localhost:8000/api/facturas/redimir', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(cliente),
+            });
 
-
-
-        console.log(cliente);
-
-        fetch(`http://localhost:8000/api/facturas/redimir`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                // 'Authorization': `Bearer ${token}`
-
-            },
-            body: JSON.stringify(cliente)
-
-        }).then(res => res.json()).then(data => {
-
+            const data = await response.json();
 
             alertRef.current.classList.remove('d-none', 'alert-danger');
             alertRef.current.classList.add('alert-info', 'd-block');
             alertRef.current.textContent = data.message;
-           
+
             setMode('create');
             // Desplazarse al inicio de la vista
             window.scrollTo({ top: 0, behavior: 'smooth' });
             setTimeout(() => {
                 alertRef.current.classList.add('d-none');
             }, 3000);
-
-        });
-
+        } catch (error) {
+            console.error('Error al redimir factura:', error);
+        }
     }
 
     /*metodo para obtener los datos de la api consultar profesiones , tipoDocumentos*/
@@ -339,8 +331,8 @@ export const RedimirFacturaView = () => {
     function handleSearchCliente(e) {
 
         e.preventDefault();
- 
-      
+
+
 
         console.log(numeroDocumentoRef.current.value);
         fetch(`http://localhost:8000/api/clientes/show/${numeroDocumentoRef.current.value}`, {
@@ -360,7 +352,7 @@ export const RedimirFacturaView = () => {
                 alertRef.current.classList.add('alert-danger', 'd-block');
                 alertRef.current.textContent = data.message;
                 window.scrollTo({ top: 0, behavior: 'smooth' });
-               
+
                 return;
             }
             setMode('update')
