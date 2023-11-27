@@ -3,12 +3,14 @@ import { CustomInput } from '../../components/global/CustomInput';
 import { CustomSelect } from '../../components/global/CustomSelect';
 import './cssRedimirFactura.css';
 
+
 export const RedimirFacturaView = () => {
     //
     const [profesiones, setProfesiones] = useState([]);
     const [tiposDocumentos, setTipoDocumentos] = useState([]);
     const [campañas, setCampañas] = useState([]);
     const [visibeButton, setVisibeButton] = useState(false);
+    const [facturas, setFacturas] = useState([]);
     //
 
 
@@ -110,16 +112,24 @@ export const RedimirFacturaView = () => {
 
         e.preventDefault();
 
+        const cliente = {
+
+            numero_documento: numeroDocumentoRef.current.value,
+            campaña_id: 1,
+        }
+
 
 
         console.log(numeroDocumentoRef.current.value);
-        fetch(`http://localhost:8000/api/clientes/show/${numeroDocumentoRef.current.value}`, {
-            method: 'GET',
+        fetch(`http://localhost:8000/api/facturas/show`, {
+            method: 'POST',
+
             headers: {
                 'Content-Type': 'application/json',
                 // 'Authorization': `Bearer ${token}`
 
-            }
+            },
+            body: JSON.stringify(cliente)
         }).then(res => res.json()).then(data => {
 
             // setMode('create');
@@ -188,6 +198,110 @@ export const RedimirFacturaView = () => {
         }
     }
 
+    //metodo para buscar facturas
+    function handleSearchFacutras(e) {
+
+        e.preventDefault();
+
+        const cliente = {
+
+            numero_documento: numeroDocumentoRef.current.value,
+            campaña_id: 1,
+        }
+
+
+
+        console.log(numeroDocumentoRef.current.value);
+        fetch(`http://localhost:8000/api/facturas/show`, {
+            method: 'POST',
+
+            headers: {
+                'Content-Type': 'application/json',
+                // 'Authorization': `Bearer ${token}`
+
+            },
+            body: JSON.stringify(cliente)
+        }).then(res => res.json()).then(data => {
+
+            // setMode('create');
+
+            if (data.success == false) {
+                setClienteFound(null);
+                alertRef.current.classList.remove('d-none', 'alert-info');
+                alertRef.current.classList.add('alert-danger', 'd-block');
+                alertRef.current.textContent = data.message;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                return;
+            }
+            setMode('update')
+            
+
+            // Desplazarse al inicio de la vista
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            alertRef.current.classList.add('d-none', 'alert-info');
+            alertRef.current.classList.remove('alert-danger', 'd-block');
+            alertRef.current.textContent = data.message;
+
+            console.log(data.data);
+
+            setFacturas(data.data);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // cleanInputs();
+        });
+
+    }
+
+    //metodo para eliminar un usuario
+    function handleRedimir(e) {
+
+        e.preventDefault();
+
+        const cliente = {
+
+            cliente_id: 1,
+            campaña_id: 1
+
+        }
+
+        console.log(clienteFound.cliente_id)
+
+        console.log(cliente);
+
+
+
+
+        console.log(cliente);
+
+        fetch(`http://localhost:8000/api/facturas/redimir`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // 'Authorization': `Bearer ${token}`
+
+            },
+            body: JSON.stringify(cliente)
+
+        }).then(res => res.json()).then(data => {
+
+
+            alertRef.current.classList.remove('d-none', 'alert-danger');
+            alertRef.current.classList.add('alert-info', 'd-block');
+            alertRef.current.textContent = data.message;
+           
+            setMode('create');
+            // Desplazarse al inicio de la vista
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => {
+                alertRef.current.classList.add('d-none');
+            }, 3000);
+
+        });
+
+    }
+
     /*metodo para obtener los datos de la api consultar profesiones , tipoDocumentos*/
     useEffect(() => {
 
@@ -201,24 +315,6 @@ export const RedimirFacturaView = () => {
             .then(res => res.json())
             .then(data => {
 
-                // const profesiones = data.profesiones.map(profesion => {
-                //     return {
-                //         value: profesion.id,
-                //         label: profesion.nombre_profesion
-                //     }
-                // })
-
-                // const documentos = data.tipoDocumentos.map(tipoDocumento => {
-                //     return {
-                //         value: tipoDocumento.id,
-                //         label: tipoDocumento.nombre_tipo_documento
-                //     }
-                // })
-
-                // setProfesiones(profesiones);
-
-                // setTipoDocumentos(documentos);
-
                 console.log(data);
 
                 const campañas = data.data.map(campaña => {
@@ -228,8 +324,8 @@ export const RedimirFacturaView = () => {
                     }
                 });
 
-                
-                setCampañas(campañas);  
+
+                setCampañas(campañas);
 
                 console.log(campañas);
 
@@ -237,6 +333,57 @@ export const RedimirFacturaView = () => {
 
 
     }, [])
+
+
+    //metodo para buscar cliente
+    function handleSearchCliente(e) {
+
+        e.preventDefault();
+ 
+      
+
+        console.log(numeroDocumentoRef.current.value);
+        fetch(`http://localhost:8000/api/clientes/show/${numeroDocumentoRef.current.value}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                // 'Authorization': `Bearer ${token}`
+
+            }
+        }).then(res => res.json()).then(data => {
+
+            // setMode('create');
+
+            if (data.success == false) {
+                setClienteFound(null);
+                alertRef.current.classList.remove('d-none', 'alert-info');
+                alertRef.current.classList.add('alert-danger', 'd-block');
+                alertRef.current.textContent = data.message;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+               
+                return;
+            }
+            setMode('update')
+
+            // // Desplazarse al inicio de la vista
+            //  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            alertRef.current.classList.add('d-none', 'alert-info');
+            alertRef.current.classList.remove('alert-danger', 'd-block');
+            alertRef.current.textContent = data.message;
+
+            console.log(data.data);
+
+
+
+            setClienteFound(data.data);
+            setVisibeButton(true);
+            // window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // cleanInputs();
+        });
+
+    }
 
 
     function cleanInputs() {
@@ -344,7 +491,7 @@ export const RedimirFacturaView = () => {
                                                     <CustomSelect
                                                         options={campañas}
                                                         elementReferenced={profesionRef}
-                                                        value={clienteFound ? clienteFound.profesion_id : ''}
+                                                    // value={clienteFound ? clienteFound.profesion_id : ''}
                                                     />
                                                 </div>
                                             </div>
@@ -354,12 +501,12 @@ export const RedimirFacturaView = () => {
                                                 </div>
 
                                                 <div className="col-12 col-sm-3 col-lg-6 col-md-4 d-flex justify-content-center">
-                                                    {visibeButton && (<input className="btn-save btn-lg btn-md mb-3" type="submit" value="Consultar saldo" />)}
+                                                    {visibeButton && (<input className="btn-save btn-lg btn-md mb-3" type="submit" value="Consultar Facturas" onClick={handleSearchFacutras} />)}
                                                 </div>
 
 
                                                 <div className="col-6 col-sm-3 col-lg-6 col-md-4 d-flex justify-content-center">
-                                                    <input className="btn-limpiar  btn-lg mb-3" type="button" value="Redimir saldo" onClick={cleanInputs} />
+                                                    <input className="btn-limpiar  btn-lg mb-3" type="button" value="Redimir saldo" onClick={handleRedimir} />
                                                 </div>
                                                 <div className="col-6 col-sm-3 col-lg-6 col-md-12 d-flex justify-content-center">
                                                     <input className="btn-delete btn-lg mb-2" type="button" value="Imprimir ticket" onClick={handleDestroy} />
@@ -385,78 +532,30 @@ export const RedimirFacturaView = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>Koaj</td>
-                                        <td>021</td>
-                                        <td>05/01/2023</td>
-                                        <td>$200.000</td>
-                                       
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Puma</td>
-                                        <td>022</td>
-                                        <td>01/01/2023</td>
-                                        <td>$200.000</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>Koaj</td>
-                                        <td>024</td>
-                                        <td>05/07/2023</td>
-                                        <td>$200.000</td>
-                                       
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Adidas</td>
-                                        <td>025</td>
-                                        <td>05/02/2022</td>
-                                        <td>$200.000</td>
-                                       
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>Koaj</td>
-                                        <td>026</td>
-                                        <td>09/25/2023</td>
-                                        <td>$200.000</td>
-                                     
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>arturo</td>
-                                        <td>027</td>
-                                        <td>05/14/2023</td>
-                                        <td>$200.000</td>
-                                      
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>Koaj</td>
-                                        <td>028</td>
-                                        <td>12/01/2023</td>
-                                        <td>$200.000</td>
-                                       
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>arturo</td>
-                                        <td>034</td>
-                                        <td>24/08/2023</td>
-                                        <td>$200.000</td>
-                                       
-                                    </tr>
-                                    
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>H&M</td>
-                                        <td>056</td>
-                                        <td>12/02/2023</td>
-                                        <td>$200.000</td>
-                                       
-                                    </tr>
+                                    {facturas && (
+                                        facturas.map(facturas => (
+
+                                            <tr key={facturas.id}>
+                                                <th scope="row">i</th>
+                                                <td>{facturas.tienda_id}</td>
+                                                <td>{facturas.numero_factura}</td>
+                                                <td>{facturas.created_at}</td>
+                                                <td>{facturas.valor_factura}</td>
+                                                {/* <td className="d-flex gap-2">
+                                                <button className="btn btn-primary btn-sm" onClick={handleEditClient}>Editar</button>
+                                                <button className="btn btn-danger btn-sm" onClick={handleDestroy}>Eliminar</button>
+                                            </td> */}
+                                            </tr>
+
+                                        )
+                                        )
+
+                                    )}
+
+
+
+
+
                                 </tbody>
                             </table>
                         </div>

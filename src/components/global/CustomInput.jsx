@@ -43,6 +43,7 @@ export const CustomInput = ({ className,labelPlaceholder, idInput, type, value, 
         : /[^0-9]/;
 
     
+        
 
     if (regexPattern.test(inputValue)) {
       // Si se ingresan caracteres no permitidos, muestra mensaje de error

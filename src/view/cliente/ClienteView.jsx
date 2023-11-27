@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import React, { useState, useEffect, useRef } from 'react';
+
 import { CustomInput } from '../../components/global/CustomInput';
 import { CustomSelect } from '../../components/global/CustomSelect';
 import '../../components/cliente/css/cssClienteview.css';

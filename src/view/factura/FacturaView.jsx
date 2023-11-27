@@ -39,18 +39,15 @@ export const FacturaView = () => {
             cliente_id: clienteFound.id,
             tienda_id: 1,
             campaña_id: 1,
-            numero_factura: numero_factura.current.value + tiendasRef.current.value,
-            redimido_status: true,
+            numero_factura: numero_factura.current.value,
             valor_factura: valorFacturaRef.current.value,
             foto_factura: "foto_factura.jpg",
-
-            saldo_factura_por_redimir: 123,
             user_id: 1,
         }
 
         console.log(factura);
 
-        const URL = mode == 'create' ? 'http://localhost:8000/api/factura/store' : `http://localhost:8000/api/clientes/update/${clienteFound.numero_documento}`;
+        const URL = mode == 'create' ? 'http://localhost:8000/api/facturas/store' : `http://localhost:8000/api/clientes/update/${clienteFound.numero_documento}`;
 
         fetch(URL, {
             method: mode == 'create' ? 'POST' : 'PUT',
@@ -108,8 +105,8 @@ export const FacturaView = () => {
 
 
         console.log(numeroDocumentoRef.current.value);
-        fetch(`http://localhost:8000/api/clientes/show/${numeroDocumentoRef.current.value}`, {
-            method: 'GET',
+        fetch(`http://localhost:8000/api/facturas/show/${numeroDocumentoRef.current.value}`, {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 // 'Authorization': `Bearer ${token}`
@@ -138,7 +135,7 @@ export const FacturaView = () => {
 
             console.log(data.data);
 
-            setClienteFound(data.data);
+            // setClienteFound(data.data);
 
             // cleanInputs();
         });
@@ -339,8 +336,9 @@ export const FacturaView = () => {
                                                                     labelPlaceholder="#n°00921"
                                                                     idInput="formNumerofactura"
                                                                     type="tel"
+                                                                    id="formNumerofactura"
                                                                     elementReferenced={numero_factura}
-                                                                    value={clienteFound ? clienteFound.direccion : ''}
+                                                                  
                                                                    
                                                                 />
                                                             </div>
@@ -356,8 +354,9 @@ export const FacturaView = () => {
                                                                 labelPlaceholder="example $12345"
                                                                 idInput="formValorFactura"
                                                                 type="tel"
+
                                                                 elementReferenced={valorFacturaRef}
-                                                                // value={clienteFound ? clienteFound.direccion : ''}
+                                                            
                                                             />
                                                         </div>
                                                         </div>
