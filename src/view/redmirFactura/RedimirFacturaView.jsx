@@ -11,6 +11,8 @@ export const RedimirFacturaView = () => {
     const [campañas, setCampañas] = useState([]);
     const [visibeButton, setVisibeButton] = useState(false);
     const [facturas, setFacturas] = useState([]);
+    const [datos, setDatos] = useState([]);
+    const [tickets, setTicket] = useState([]);
     //
 
 
@@ -29,9 +31,11 @@ export const RedimirFacturaView = () => {
     const fechaNacimientoRef = useRef();
     const hijosRef = useRef();
     const numeroDocumentoRef = useRef();
-    const mascotasRef = useRef();
+    const campañaRef = useRef();
     //
     const alertRef = useRef();
+
+    var i = 0;
 
     // const user = JSON.parse(localStorage.getItem('user'));
 
@@ -51,7 +55,7 @@ export const RedimirFacturaView = () => {
             fecha_nacimiento: fechaNacimientoRef.current.value,
             hijos: hijosRef.current.value,
             numero_documento: numeroDocumentoRef.current.value,
-            mascotas: mascotasRef.current.value,
+
             user_id: 1
         }
 
@@ -143,7 +147,7 @@ export const RedimirFacturaView = () => {
 
                 return;
             }
-            setMode('update')
+
             setVisibeButton(true);
 
             // Desplazarse al inicio de la vista
@@ -153,7 +157,7 @@ export const RedimirFacturaView = () => {
             alertRef.current.classList.remove('alert-danger', 'd-block');
             alertRef.current.textContent = data.message;
 
-            console.log(data.data);
+            console.log('usuario', data.data);
 
             setClienteFound(data.data);
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -206,7 +210,7 @@ export const RedimirFacturaView = () => {
         const cliente = {
 
             numero_documento: numeroDocumentoRef.current.value,
-            campaña_id: 1,
+            campaña_id: campañaRef.current.value,
         }
 
 
@@ -234,7 +238,17 @@ export const RedimirFacturaView = () => {
 
                 return;
             }
-            setMode('update')
+
+            if (data.data.length == 0) {
+
+                alertRef.current.classList.remove('d-none', 'alert-info');
+                alertRef.current.classList.add('alert-danger', 'd-block');
+                alertRef.current.textContent = "No se encontraron facturas para redimir";
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                return;
+            }
+
 
 
             // Desplazarse al inicio de la vista
@@ -242,11 +256,13 @@ export const RedimirFacturaView = () => {
 
             alertRef.current.classList.add('d-none', 'alert-info');
             alertRef.current.classList.remove('alert-danger', 'd-block');
-            alertRef.current.textContent = data.message;
+            alertRef.current.textContent = "Facturas encontradas";
 
-            console.log(data.data);
+            console.log(data);
 
             setFacturas(data.data);
+            setDatos(data);
+            console.log('datos', datos);
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
             // cleanInputs();
@@ -256,6 +272,7 @@ export const RedimirFacturaView = () => {
 
     // Método para redimir
     async function handleRedimir(e) {
+
         e.preventDefault();
 
         console.log('clienteFound:', clienteFound);
@@ -263,10 +280,17 @@ export const RedimirFacturaView = () => {
 
         const cliente = {
             cliente_id: clienteFound.id,
-            campaña_id: facturas[0].campaña_id,
+            campaña_id: campañaRef.current.value,
         };
 
+        const factura = {
+
+            numero_documento: numeroDocumentoRef.current.value,
+            campaña_id: campañaRef.current.value,
+        }
+
         console.log(cliente);
+        console.log(factura);
 
         try {
             const response = await fetch('http://localhost:8000/api/facturas/redimir', {
@@ -277,18 +301,43 @@ export const RedimirFacturaView = () => {
                 body: JSON.stringify(cliente),
             });
 
+            const facturas  = await fetch('http://localhost:8000/api/facturas/show', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(factura),
+            });
+   
+
+            const datafactura = await facturas.json(); 
+                   
+
             const data = await response.json();
+
+            console.log('data', datafactura.data);
+
+
+            setTicket(data.ticketsRedimidos)
+            setFacturas(datafactura.data);
+            setDatos(datafactura)
+            console.log('tickets', data.ticketsRedimidos);
 
             alertRef.current.classList.remove('d-none', 'alert-danger');
             alertRef.current.classList.add('alert-info', 'd-block');
             alertRef.current.textContent = data.message;
 
-            setMode('create');
+
+
+            console.log('fctur', data);
+
+
             // Desplazarse al inicio de la vista
             window.scrollTo({ top: 0, behavior: 'smooth' });
             setTimeout(() => {
                 alertRef.current.classList.add('d-none');
             }, 3000);
+           
         } catch (error) {
             console.error('Error al redimir factura:', error);
         }
@@ -297,7 +346,7 @@ export const RedimirFacturaView = () => {
     /*metodo para obtener los datos de la api consultar profesiones , tipoDocumentos*/
     useEffect(() => {
 
-        fetch("http://localhost:8000/api/campaña/", {
+        fetch("http://localhost:8000/api/campañas/", {
             method: 'GET',
             headers: {
                 // 'Authorization': `Bearer ${token}`,
@@ -357,18 +406,18 @@ export const RedimirFacturaView = () => {
             }
             setMode('update')
 
-            // // Desplazarse al inicio de la vista
-            //  window.scrollTo({ top: 0, behavior: 'smooth' });
-
+            // Desplazarse al inicio de la vista
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setClienteFound(data.data);
             alertRef.current.classList.add('d-none', 'alert-info');
             alertRef.current.classList.remove('alert-danger', 'd-block');
-            alertRef.current.textContent = data.message;
+            alertRef.current.textContent = 'Cliente encontrado';
 
             console.log(data.data);
 
 
 
-            setClienteFound(data.data);
+
             setVisibeButton(true);
             // window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -376,7 +425,30 @@ export const RedimirFacturaView = () => {
         });
 
     }
+    //
 
+    function formatfecha(fechaCompleta) {
+        const fechaFormat = new Date(fechaCompleta);
+
+        // Obtener componentes de fecha individualmente
+        const año = fechaFormat.getFullYear();
+        const mes = fechaFormat.getMonth() + 1; // Los meses en JavaScript son de 0 a 11
+        const dia = fechaFormat.getDate();
+
+        // Crear una cadena de fecha formateada
+        const fechaFormateada = `${año}-${mes < 10 ? '0' : ''}${mes}-${dia < 10 ? '0' : ''}${dia}`;
+        return fechaFormateada;
+    }
+
+    function formatearMonedaCOP(monto) {
+        // Formatear el monto como número con separadores de miles
+        const montoFormateado = new Intl.NumberFormat('es-CO', {
+            style: 'currency',
+            currency: 'COP',
+        }).format(monto);
+
+        return montoFormateado;
+    }
 
     function cleanInputs() {
         setClienteFound(null);
@@ -387,7 +459,7 @@ export const RedimirFacturaView = () => {
         direccionRef.current.value = '';
         hijosRef.current.value = '';
         numeroDocumentoRef.current.value = '';
-        mascotasRef.current.value = '';
+
         fechaNacimientoRef.current.value = null;
 
         nombreRef.current.clearInputField();
@@ -399,7 +471,7 @@ export const RedimirFacturaView = () => {
         fechaNacimientoRef.current.clearInputField();
         hijosRef.current.clearInputField();
         numeroDocumentoRef.current.clearInputField();
-        mascotasRef.current.clearInputField();
+
 
 
     }
@@ -419,8 +491,6 @@ export const RedimirFacturaView = () => {
                     <div className="alert alert-info d-none" role="alert" ref={alertRef}></div>
 
                     <div className=" col-sm-12  col-lg-5 col-md-12 col-12 mb-5 mb-lg-0 mt-lg-3 mt-4 mb-4">
-
-                        <div className="alert alert-info d-none" role="alert" ref={alertRef}></div>
 
                         <div className="card bg-glass custom-form mt-5" style={{ borderRadius: '26px' }}>
                             <div className="card-body px-4 py-4 px-md-5">
@@ -482,7 +552,7 @@ export const RedimirFacturaView = () => {
                                                     </label>
                                                     <CustomSelect
                                                         options={campañas}
-                                                        elementReferenced={profesionRef}
+                                                        elementReferenced={campañaRef}
                                                     // value={clienteFound ? clienteFound.profesion_id : ''}
                                                     />
                                                 </div>
@@ -528,11 +598,11 @@ export const RedimirFacturaView = () => {
                                         facturas.map(facturas => (
 
                                             <tr key={facturas.id}>
-                                                <th scope="row">i</th>
-                                                <td>{facturas.tienda_id}</td>
+                                                <th scope="row">{i++}</th>
+                                                <td>{facturas.nombre_tienda}</td>
                                                 <td>{facturas.numero_factura}</td>
-                                                <td>{facturas.created_at}</td>
-                                                <td>{facturas.valor_factura}</td>
+                                                <td>{formatfecha(facturas.created_at)}</td>
+                                                <td>{formatearMonedaCOP(facturas.valor_factura)}</td>
                                                 {/* <td className="d-flex gap-2">
                                                 <button className="btn btn-primary btn-sm" onClick={handleEditClient}>Editar</button>
                                                 <button className="btn btn-danger btn-sm" onClick={handleDestroy}>Eliminar</button>
@@ -543,11 +613,6 @@ export const RedimirFacturaView = () => {
                                         )
 
                                     )}
-
-
-
-
-
                                 </tbody>
                             </table>
                         </div>
@@ -564,7 +629,7 @@ export const RedimirFacturaView = () => {
                                         idInput="formSaldoPorRedimir"
                                         type="text"
                                         elementReferenced={apellidoRef}
-                                        value={clienteFound ? clienteFound.apellidos : ''}
+                                        value={datos ? formatearMonedaCOP(datos.totalARedimir) : ''}
                                         disabled={true}
                                     />
                                 </div>
@@ -574,48 +639,38 @@ export const RedimirFacturaView = () => {
 
 
                         <h2 className="tituloTabla text-center mt-4 mb-4">TICKETS</h2>
+                        <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                            <table class="table table-bordered table-alternate">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">No Ticket Asignado</th>
 
-                        <table class="table table-bordered table-alternate">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">No Ticket Asignado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
 
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>0432</td>
+                                    {tickets && (
 
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>123</td>
+                                        tickets.map(tickets => (
 
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>1245</td>
+                                            <tr key={i + 1}>
+                                                <th scope="row">{i++}</th>
+                                                <td>{tickets.numero}</td>
+                                                {/* <td className="d-flex gap-2">
+                                                <button className="btn btn-primary btn-sm" onClick={handleEditClient}>Editar</button>
+                                                <button className="btn btn-danger btn-sm" onClick={handleDestroy}>Eliminar</button>
+                                            </td> */}
+                                            </tr>
 
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>1245</td>
+                                        )
+                                        )
 
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>1245</td>
+                                    )}
 
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>1245</td>
-
-                                </tr>
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
 
 
 

@@ -12,6 +12,7 @@ import { ConsultarTickets } from "./view/ticket/ConsultarTickets"
 import { ProfesionView } from "./view/profesiones/ProfesionView"
 import { TiendaView } from "./view/Tienda/TiendaView"
 import { DocumentoView } from "./view/documento/DocumentoView"
+import { LoginView } from "./view/login/LoginView"
 
 
 export const App = () => {
@@ -33,9 +34,10 @@ export const App = () => {
       }
 
 
-      <Navbar />
+      
       <Routes>
         <Route path="/login" element={<Login setUserAuth={setUserAuth} isAllowed={!!userAuth} redirect="/cliente" />}></Route>
+        <Route path="/loginx" element={<LoginView setUserAuth={setUserAuth} isAllowed={!!userAuth} redirect="/home" />}></Route>
         <Route path="/home" element={<Home />}></Route>
         <Route path="/cliente" element={<ClienteView />}></Route>
         <Route path="/campaña" element={<CampañaView />}></Route>

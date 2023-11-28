@@ -160,7 +160,7 @@ export const ClienteView = () => {
             alertRef.current.textContent = "Digite el numero de documento del cliente a eliminar";
 
         }else{
-        fetch(`http://localhost:8000/api/clientes/delete/${clienteFound.numero_documento}`, {
+        fetch(`http://localhost:8000/api/clientes/delete/${numeroDocumentoRef.current.value}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

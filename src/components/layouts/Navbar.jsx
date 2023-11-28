@@ -43,23 +43,36 @@ export const Navbar = () => {
 
                     <div className="collapse navbar-collapse" id="navbarNav">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li className="nav-item">
-                                <a className="nav-link" href="#">Inicio</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="#">Información</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="#">Reportes</a>
+                        <li className="nav-item dropdown">
+                                <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Configuracion
+                                </a>
+                                <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a className="dropdown-item" href="#">Registrar tipo documento</a></li>
+                                    <li><a className="dropdown-item" href="#">Registrar profesiones</a></li>
+                                </ul>
                             </li>
                             <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Clientes
+                                  Procesos
                                 </a>
                                 <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a className="dropdown-item" href="#">My profile</a></li>
-                                    <li><a className="dropdown-item" href="#">Settings</a></li>
-                                    <li><a className="dropdown-item" href="#">Logout</a></li>
+                                    <li><a className="dropdown-item" href="#">Registrar cliente</a></li>
+                                    <li><a className="dropdown-item" href="#">registrar tienda</a></li>
+                                    <li><a className="dropdown-item" href="#">registrar campaña</a></li>
+                                    <li><a className="dropdown-item" href="#">registrar factura</a></li>
+                                    <li><a className="dropdown-item" href="#">redimir factura</a></li>
+                                </ul>
+                            </li>
+                            <li className="nav-item dropdown">
+                                <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Consultas
+                                </a>
+                                <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a className="dropdown-item" href="#">tickets asignados por campaña</a></li>
+                                <li><a className="dropdown-item" href="#">tickets por cliente</a></li>
+                                <li><a className="dropdown-item" href="#">campañas habilitadas</a></li>
+                                <li><a className="dropdown-item" href="#">facturas redimidas</a></li>
                                 </ul>
                             </li>
                         </ul>

@@ -40,10 +40,11 @@ export const CustomInput = ({ className,labelPlaceholder, idInput, type, value, 
         ? /[^A-Za-zÑñÁáÉéÍíÓóÚú\s-#^0-9]/
         : type === 'text'
         ? /[^A-Za-zÑñÁáÉéÍíÓóÚú\s]/
+        : idInput === 'formContraseña'
+        ? /[^A-Za-zÑñÁáÉéÍíÓóÚú\s-#^0-9]/
         : /[^0-9]/;
 
     
-        
 
     if (regexPattern.test(inputValue)) {
       // Si se ingresan caracteres no permitidos, muestra mensaje de error
