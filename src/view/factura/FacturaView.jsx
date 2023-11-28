@@ -152,7 +152,7 @@ export const FacturaView = () => {
     /*metodo para obtener los datos de la api consultar profesiones , tipoDocumentos*/
     useEffect(() => {
 
-        fetch("http://localhost:8000/api/facturas/info", {
+        fetch("http://localhost:8000/api/facturas/info-factura", {
             method: 'GET',
             headers: {
                 // 'Authorization': `Bearer ${token}`,
