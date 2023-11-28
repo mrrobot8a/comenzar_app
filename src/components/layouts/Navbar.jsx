@@ -54,14 +54,24 @@ export const Navbar = () => {
                             </li>
                             <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                  Procesos
+                                  Gestionar Procesos
                                 </a>
                                 <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a className="dropdown-item" href="#">Registrar cliente</a></li>
-                                    <li><a className="dropdown-item" href="#">registrar tienda</a></li>
-                                    <li><a className="dropdown-item" href="#">registrar campaña</a></li>
-                                    <li><a className="dropdown-item" href="#">registrar factura</a></li>
-                                    <li><a className="dropdown-item" href="#">redimir factura</a></li>
+                                    <Link className="nav-item text-decoration-none" to="/clientes">
+                                        <span className="nav-link active">Gestionar Clientes</span>
+                                    </Link>
+                                    <Link className="nav-item text-decoration-none" to="/tiendas">
+                                        <span className="nav-link active">Gestionar Tienda</span>
+                                    </Link>
+                                    <Link className="nav-item text-decoration-none" to="/campañas">
+                                        <span className="nav-link active">Gestionar Campaña</span>
+                                    </Link>
+                                    <Link className="nav-item text-decoration-none" to="/facturas">
+                                        <span className="nav-link active">Gestionar Facturas</span>
+                                    </Link>
+                                    <Link className="nav-item text-decoration-none" to="/redimir-facturas">
+                                        <span className="nav-link active">Redimir Facturas</span>
+                                    </Link>
                                 </ul>
                             </li>
                             <li className="nav-item dropdown">

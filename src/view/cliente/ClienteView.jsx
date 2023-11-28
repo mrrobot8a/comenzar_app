@@ -5,15 +5,18 @@ import { CustomSelect } from '../../components/global/CustomSelect';
 import '../../components/cliente/css/cssClienteview.css';
 
 export const ClienteView = () => {
-    //
+
+    const user = JSON.parse(localStorage.getItem("user"))
+    
     const [profesiones, setProfesiones] = useState([]);
     const [tiposDocumentos, setTipoDocumentos] = useState([]);
 
     const [clienteFound, setClienteFound] = useState(null);
 
     const [mode, setMode] = useState('create');
-    //
+    
     const token = localStorage.getItem('token');
+
     const profesionRef = useRef();
     const tipoDocumentoRef = useRef();
     const nombreRef = useRef();
@@ -25,10 +28,8 @@ export const ClienteView = () => {
     const hijosRef = useRef();
     const numeroDocumentoRef = useRef();
     const mascotasRef = useRef();
-    //
     const alertRef = useRef();
 
-    // const user = JSON.parse(localStorage.getItem('user'));
     
     //metodo crear cliente
     function handleSubmit(e) {
@@ -47,10 +48,8 @@ export const ClienteView = () => {
             hijos: hijosRef.current.value,
             numero_documento: numeroDocumentoRef.current.value,
             mascotas: mascotasRef.current.value,
-            user_id: 1
+            user_id: user.id
         }
-
-        console.log(cliente)
 
         const URL = mode == 'create' ? 'http://localhost:8000/api/clientes/store' : `http://localhost:8000/api/clientes/update/${clienteFound.numero_documento}`;
 
@@ -96,9 +95,6 @@ export const ClienteView = () => {
             }, 3000);
 
         });
-
-
-
 
     }
 
@@ -288,7 +284,7 @@ export const ClienteView = () => {
                                                         <div className="col-md-6 mb-4">
                                                             <div className="form-group">
                                                                 <label className="form-label" htmlFor="form3Example4">
-                                                                    Tipo de documento
+                                                                    Tipo de documento*
                                                                 </label>
                                                                 <CustomSelect
                                                                     options={tiposDocumentos}
@@ -300,10 +296,10 @@ export const ClienteView = () => {
                                                         <div className="col-md-6 mb-4">
                                                             <div className="form-outline">
                                                                 <label className="form-label" htmlFor="form3Example3">
-                                                                    Numero de documento
+                                                                    Numero de documento*
                                                                 </label>
                                                                 <CustomInput
-                                                                    labelPlaceholder="N° 1231282"
+                                                                    
                                                                     idInput="formCelular"
                                                                     type="tel"
                                                                     elementReferenced={numeroDocumentoRef}
@@ -316,10 +312,10 @@ export const ClienteView = () => {
                                                         <div className="col-md-6 mb-4">
                                                             <div className="form-outline">
                                                                 <label className="form-label" htmlFor="form3Example1">
-                                                                    Nombres completo
+                                                                    Nombres*
                                                                 </label>
                                                                 <CustomInput
-                                                                    labelPlaceholder="Nombre cliente"
+                                                                    
                                                                     idInput="formNombre"
                                                                     type="text"
                                                                     elementReferenced={nombreRef}
@@ -330,10 +326,10 @@ export const ClienteView = () => {
                                                         <div className="col-md-6 mb-4">
                                                             <div className="form-outline">
                                                                 <label className="form-label" htmlFor="form3Example2">
-                                                                    Apellidos
+                                                                    Apellidos*
                                                                 </label>
                                                                 <CustomInput
-                                                                    labelPlaceholder="apellido cliente"
+                                                                    
                                                                     idInput="formApellido"
                                                                     type="text"
                                                                     elementReferenced={apellidoRef}
@@ -346,10 +342,10 @@ export const ClienteView = () => {
                                                         <div className="col-md-6 mb-4">
                                                             <div className="form-outline">
                                                                 <label className="form-label" htmlFor="form3Example1">
-                                                                    Teléfono
+                                                                    Teléfono*
                                                                 </label>
                                                                 <CustomInput
-                                                                    labelPlaceholder="# Celular"
+                                                                   
                                                                     idInput="formCelular"
                                                                     type="tel"
                                                                     elementReferenced={telefonoRef}
@@ -360,10 +356,10 @@ export const ClienteView = () => {
                                                         <div className="col-md-6 mb-4">
                                                             <div className="form-outline">
                                                                 <label className="form-label" htmlFor="form3Example1">
-                                                                    Correo electronico
+                                                                    Correo electronico*
                                                                 </label>
                                                                 <CustomInput
-                                                                    labelPlaceholder="example@example.com"
+                                                                    
                                                                     idInput="formEmail"
                                                                     type="email"
                                                                     elementReferenced={emailRef}
@@ -378,7 +374,7 @@ export const ClienteView = () => {
                                                                 Dirección
                                                             </label>
                                                             <CustomInput
-                                                                labelPlaceholder="example av.33 #23-34"
+                                                                
                                                                 idInput="formDireccion"
                                                                 type="text"
                                                                 elementReferenced={direccionRef}
@@ -393,11 +389,11 @@ export const ClienteView = () => {
                                                                     Numero de hijos
                                                                 </label>
                                                                 <CustomInput
-                                                                    labelPlaceholder="N°999"
+                                                                    
                                                                     idInput="formHijos"
                                                                     type="tel"
                                                                     elementReferenced={hijosRef}
-                                                                    value={clienteFound ? clienteFound.hijos : ''}
+                                                                    value={clienteFound ? clienteFound.hijos : 0}
                                                                 />
                                                             </div>
                                                         </div>
@@ -407,11 +403,11 @@ export const ClienteView = () => {
                                                                     Numero de mascotas
                                                                 </label>
                                                                 <CustomInput
-                                                                    labelPlaceholder="N°999"
+                                                                    
                                                                     idInput="formMascotas"
                                                                     type="tel"
                                                                     elementReferenced={mascotasRef} 
-                                                                    value={clienteFound ? clienteFound.mascotas : ''}
+                                                                    value={clienteFound ? clienteFound.mascotas : 0}
                                                                 />
                                                             </div>
                                                         </div>
@@ -420,7 +416,7 @@ export const ClienteView = () => {
                                                         <div className="col-md-6 mb-4">
                                                             <div className="form-outline">
                                                                 <label className="form-label" htmlFor="form3Example3">
-                                                                    Fecha Nacimiento
+                                                                    Fecha Nacimiento*
                                                                 </label>
                                                                 <CustomInput
                                                                     idInput="formDate"
@@ -433,7 +429,7 @@ export const ClienteView = () => {
                                                         <div className="col-md-6 mb-4">
                                                             <div className="form-group">
                                                                 <label className="form-label" htmlFor="form3Example4">
-                                                                    Profesión
+                                                                    Profesión*
                                                                 </label>
                                                                 <CustomSelect
                                                                     options={profesiones}

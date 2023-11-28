@@ -3,31 +3,13 @@ import { CustomInput } from '../../components/global/CustomInput';
 import { CustomSelect } from '../../components/global/CustomSelect';
 import '../../components/cliente/css/cssClienteview.css';
 
-export const TiendaView = () => {
-    //
-    const [profesiones, setProfesiones] = useState([]);
-    const [tiposDocumentos, setTipoDocumentos] = useState([]);
-
-    const [clienteFound, setClienteFound] = useState(null);
-
-    const [mode, setMode] = useState('create');
-    //
-    const token = localStorage.getItem('token');
-    const profesionRef = useRef();
-    const tipoDocumentoRef = useRef();
-    const nombreRef = useRef();
-    const apellidoRef = useRef();
-    const emailRef = useRef();
-    const telefonoRef = useRef();
-    const direccionRef = useRef();
-    const fechaNacimientoRef = useRef();
-    const hijosRef = useRef();
-    const numeroDocumentoRef = useRef();
-    const mascotasRef = useRef();
-    //
+export const TiendaView = ({user}) => {
+    
     const alertRef = useRef();
+    const nombreRef = useRef();
+    const codigoRef = useRef();
 
-    // const user = JSON.parse(localStorage.getItem('user'));
+    const token = localStorage.getItem('token');
     
     //metodo crear cliente
     function handleSubmit(e) {
@@ -35,26 +17,16 @@ export const TiendaView = () => {
         e.preventDefault();
 
         const cliente = {
-            profesion_id: profesionRef.current.value,
-            tipo_documento_id: tipoDocumentoRef.current.value,
             nombre: nombreRef.current.value,
-            apellidos: apellidoRef.current.value,
-            email: emailRef.current.value,
-            telefono: telefonoRef.current.value,
-            direccion: direccionRef.current.value,
-            fecha_nacimiento: fechaNacimientoRef.current.value,
-            hijos: hijosRef.current.value,
-            numero_documento: numeroDocumentoRef.current.value,
-            mascotas: mascotasRef.current.value,
-            user_id: 1
+            user_id: user.id,
+            codigo_tienda: codigoRef.current.value,
         }
 
-        console.log(cliente)
-
-        const URL = mode == 'create' ? 'http://localhost:8000/api/clientes/store' : `http://localhost:8000/api/clientes/update/${clienteFound.numero_documento}`;
+        const URL = 'http://localhost:8000/api/campañas/store';
 
         fetch(URL, {
-            method: mode == 'create' ? 'POST' : 'PUT',
+            // method: mode == 'create' ? 'POST' : 'PUT',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -81,176 +53,29 @@ export const TiendaView = () => {
 
             
            
-            setMode('create');
-            
-
-            // Desplazarse al inicio de la vista
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            cleanInputs();
-            setClienteFound(null);
-
-            setTimeout(() => {
-                alertRef.current.classList.add('d-none');
-            }, 3000);
-
-        });
-
-
-
-
-    }
-
-    //metodo para buscar cliente
-    function handleSearchCliente(e) {
-
-        e.preventDefault();
- 
-      
-
-        console.log(numeroDocumentoRef.current.value);
-        fetch(`http://localhost:8000/api/clientes/show/${numeroDocumentoRef.current.value}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                // 'Authorization': `Bearer ${token}`
-
-            }
-        }).then(res => res.json()).then(data => {
-
             // setMode('create');
-
-            if (data.success == false) {
-                setClienteFound(null);
-                alertRef.current.classList.remove('d-none', 'alert-info');
-                alertRef.current.classList.add('alert-danger', 'd-block');
-                alertRef.current.textContent = data.message;
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-               
-                return;
-            }
-            setMode('update')
-
-            // Desplazarse al inicio de la vista
-             window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            alertRef.current.classList.add('d-none', 'alert-info');
-            alertRef.current.classList.remove('alert-danger', 'd-block');
-            alertRef.current.textContent = data.message;
-
-            console.log(data.data);
-
-            setClienteFound(data.data);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            // cleanInputs();
-        });
-
-    }
-
-    //metodo para eliminar un usuario
-    function handleDestroy()
-    {
-        if (clienteFound == null) {
-            // Desplazarse al inicio de la vista
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            alertRef.current.classList.remove('d-none', 'alert-danger');
-            alertRef.current.classList.add('alert-info', 'd-block');
-            alertRef.current.textContent = "Digite el numero de documento del cliente a eliminar";
-
-        }else{
-        fetch(`http://localhost:8000/api/clientes/delete/${clienteFound.numero_documento}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                // 'Authorization': `Bearer ${token}`
-                
-            }
-        }).then(res => res.json()).then(data => {
             
-            cleanInputs();
-            alertRef.current.classList.remove('d-none', 'alert-danger');
-            alertRef.current.classList.add('alert-info', 'd-block');
-            alertRef.current.textContent = data.message;
-            setClienteFound(null);
-            setMode('create');
+
             // Desplazarse al inicio de la vista
             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            cleanInputs();
+            // setClienteFound(null);
+
             setTimeout(() => {
                 alertRef.current.classList.add('d-none');
             }, 3000);
 
         });
+
     }
-    }
-
-    /*metodo para obtener los datos de la api consultar profesiones , tipoDocumentos*/
-    useEffect(() => {
-
-        fetch("http://localhost:8000/api/clientes/info", {
-            method: 'GET',
-            headers: {
-                // 'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-        })
-            .then(res => res.json())
-            .then(data => {
-
-                const profesiones = data.profesiones.map(profesion => {
-                    return {
-                        value: profesion.id,
-                        label: profesion.nombre_profesion
-                    }
-                })
-
-                const documentos = data.tipoDocumentos.map(tipoDocumento => {
-                    return {
-                        value: tipoDocumento.id,
-                        label: tipoDocumento.nombre_tipo_documento
-                    }
-                })
-
-                setProfesiones(profesiones);
-
-                setTipoDocumentos(documentos);
-
-            }).catch(error => console.log(error));
-
-
-    }, [])
 
 
     function cleanInputs()
     { 
-        setClienteFound(null);
-        nombreRef.current.value = '';
-        apellidoRef.current.value = '';
-        emailRef.current.value = '';
-        telefonoRef.current.value = '';
-        direccionRef.current.value = '';
-        hijosRef.current.value = '';
-        numeroDocumentoRef.current.value = '';
-        mascotasRef.current.value= '';
-        fechaNacimientoRef.current.value = null;
-
         nombreRef.current.clearInputField();
-        apellidoRef.current.clearInputField();
-        numeroDocumentoRef.current.clearInputField();
-        emailRef.current.clearInputField();
-        telefonoRef.current.clearInputField();
-        direccionRef.current.clearInputField();
-        fechaNacimientoRef.current.clearInputField();
-        hijosRef.current.clearInputField();
-        numeroDocumentoRef.current.clearInputField();
-        mascotasRef.current.clearInputField();      
-
-
+        codigoRef.current.clearInputField();  
     }
-
-
-    
-
 
     return (
         <>
@@ -287,28 +112,26 @@ export const TiendaView = () => {
                                                     <div className="col-md-6 mb-4">
                                                             <div className="form-outline">
                                                                 <label className="form-label" htmlFor="form3Example1">
-                                                                    Codigo Tienda
+                                                                    Codigo Tienda*
                                                                 </label>
                                                                 <CustomInput
-                                                                    labelPlaceholder="ej:0231"
                                                                     idInput="formNombre"
                                                                     type="tel"
-                                                                    elementReferenced={nombreRef}
-                                                                    value={clienteFound ? clienteFound.nombre : ''}
+                                                                    elementReferenced={codigoRef}
+                                                                    // value={clienteFound ? clienteFound.nombre : ''}
                                                                 />
                                                             </div>
                                                         </div>      
                                                         <div className="col-md-6 mb-4">
                                                             <div className="form-outline">
                                                                 <label className="form-label" htmlFor="form3Example1">
-                                                                    Nombre Tienda
+                                                                    Nombre Tienda*
                                                                 </label>
                                                                 <CustomInput
-                                                                    labelPlaceholder="ej: Homecenter"
                                                                     idInput="formNombre"
                                                                     type="text"
                                                                     elementReferenced={nombreRef}
-                                                                    value={clienteFound ? clienteFound.nombre : ''}
+                                                                    // value={clienteFound ? clienteFound.nombre : ''}
                                                                 />
                                                             </div>
                                                         </div>        
@@ -320,13 +143,13 @@ export const TiendaView = () => {
                                                             <input className="btn-save btn-lg mb-2" type="submit" value="Registrar" />
                                                         </div>
                                                         <div className="col-6 col-sm-3 d-flex justify-content-center">
-                                                            <input className="btn-consultar btn-lg mb-2" type="button" value="Consultar" onClick={handleSearchCliente} />
+                                                            <input className="btn-consultar btn-lg mb-2" type="button" value="Consultar" />
                                                         </div>
                                                         <div className="col-6 col-sm-3 d-flex justify-content-center">
                                                             <input className="btn-limpiar  btn-lg mb-2" type="button" value="limpiar" onClick={cleanInputs} />
                                                         </div>
                                                         <div className="col-6 col-sm-3 d-flex justify-content-center">
-                                                            <input className="btn-delete btn-lg mb-2" type="button" value="Eliminar" onClick={handleDestroy} />
+                                                            <input className="btn-delete btn-lg mb-2" type="button" value="Eliminar" />
                                                         </div>
                                                     </div>
                                                 </div>

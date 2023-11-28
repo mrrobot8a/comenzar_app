@@ -87,7 +87,7 @@ export const CustomInput = ({ className,labelPlaceholder, idInput, type, value, 
         onBlur={handleBlur}
         onFocus={handleFocus}
         ref={elementReferenced}
-        required
+        // TODO: disabled no todos los inputs van hacer requeridos por favor modificar esto 
         disabled={disabled}
       />
       {mensajeError && tooltipVisible && (

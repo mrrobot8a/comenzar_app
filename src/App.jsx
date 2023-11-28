@@ -18,7 +18,6 @@ import { LoginView } from "./view/login/LoginView"
 export const App = () => {
 
   const [userAuth, setUserAuth] = useState(null);
-
   useEffect(() => {
 
     const user = localStorage.getItem("user");
@@ -26,28 +25,25 @@ export const App = () => {
 
   }, []);
 
+  // console.log(userAuth)
+
   return (
     <div>
 
       {
         !!userAuth && <Navbar />
       }
-
-
       
       <Routes>
-        <Route path="/login" element={<Login setUserAuth={setUserAuth} isAllowed={!!userAuth} redirect="/cliente" />}></Route>
-        <Route path="/loginx" element={<LoginView setUserAuth={setUserAuth} isAllowed={!!userAuth} redirect="/home" />}></Route>
+        <Route path="/login" element={<Login user={userAuth} setUserAuth={setUserAuth} isAllowed={!!userAuth} redirect="/home" />}></Route>
         <Route path="/home" element={<Home />}></Route>
-        <Route path="/cliente" element={<ClienteView />}></Route>
-        <Route path="/campaña" element={<CampañaView />}></Route>
-        <Route path="/factura" element={<FacturaView />}></Route>
-        <Route path="/RedimirFactura" element={<RedimirFacturaView />}></Route>
-        <Route path="/ConstarTieckts" element={<ConsultarTickets />}></Route>
-        <Route path="/Profesion" element={<ProfesionView />}></Route>
-        <Route path="/Tienda" element={<TiendaView />}></Route>
-        <Route path="/Documento" element={<DocumentoView />}></Route>
-        <Route path="*">"404 Not Found"</Route>
+        <Route path="/clientes" element={<ClienteView />}></Route>
+        <Route path="/campañas" element={<CampañaView />}></Route>
+        <Route path="/facturas" element={<FacturaView />}></Route>
+        <Route path="/redimir-facturas" element={<RedimirFacturaView />}></Route>
+        <Route path="/consultar-ticket" element={<ConsultarTickets />}></Route>
+        <Route path="/tiendas" element={<TiendaView />}></Route>
+        <Route path="/*">"404 Not Found"</Route>
 
       </Routes>
     </div>

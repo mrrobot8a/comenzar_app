@@ -5,29 +5,10 @@ import { CustomSelect } from '../../components/global/CustomSelect';
 import '../login/login.css'
 
 export const LoginView = ({ setUserAuth, isAllowed, redirect }) => {
-    //
-
-    //
-    const token = localStorage.getItem('token');
-    const profesionRef = useRef();
-    const tipoDocumentoRef = useRef();
-    const nombreRef = useRef();
-    const apellidoRef = useRef();
-;
-    const telefonoRef = useRef();
-    const direccionRef = useRef();
-    const fechaNacimientoRef = useRef();
-    const hijosRef = useRef();
-    const numeroDocumentoRef = useRef();
-    const mascotasRef = useRef();
-    //
-    const alertRef = useRef();
-
-    // const user = JSON.parse(localStorage.getItem('user'));
-    
     
     const emailRef = useRef();
     const passwordRef = useRef();
+    const alertRef = useRef();
 
     function handleSumibit(e) {
 
