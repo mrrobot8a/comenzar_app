@@ -86,7 +86,7 @@ export const Navbar = () => {
                                 </ul>
                             </li>
                         </ul>
-                        <div class="form-inline my-2 my-lg-0 mx-md-0 mx-lg-2">
+                        <div className="form-inline my-2 my-lg-0 mx-md-0 mx-lg-2">
                             <div className=" collapse navbar-collapse d-flex align-items-center" id="navbarNavDarkDropdown" >
                                 <ul class="navbar-nav">
                                     <li className="nav-item dropdown ">
