@@ -70,16 +70,6 @@ export const ClienteView = () => {
             showAlertSuccess(data);           
            
             setMode('create');
-            
-            
-
-            // Desplazarse al inicio de la vista
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-
-
-            // Desplazarse al inicio de la vista
-            window.scrollTo({ top: 0, behavior: 'smooth' });
 
             cleanInputs();
 
