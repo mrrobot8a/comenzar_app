@@ -20,12 +20,7 @@ export const CampañaView = () => {
     const fechaCaducidad = useRef();
     const campañaHabilitada = useRef();
     
-
-    
-    //
     const alertRef = useRef();
-
-    // const user = JSON.parse(localStorage.getItem('user'));
 
     //metodo crear cliente
     function handleSubmit(e) {
