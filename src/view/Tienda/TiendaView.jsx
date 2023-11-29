@@ -17,7 +17,9 @@ export const TiendaView = () => {
 
         e.preventDefault();
 
-        if(!validateInputsCreate()) return 
+        if(validateInputsCreate() == false){
+            return;
+        }
         
         const cliente = {
             nombre: nombreRef.current.value,
@@ -40,34 +42,108 @@ export const TiendaView = () => {
 
             if (!data.success) {
 
-                alertRef.current.classList.remove('d-none', 'alert-info');
-                alertRef.current.classList.add('alert-danger');
-                alertRef.current.textContent = "Los datos introducidos son incorrectos, por favor verificarlos";
+                showAlertDanger(data);
                 return;
-
             }
-            
-            
 
-        
-
-            alertRef.current.classList.remove('d-none', 'alert-danger');
-            alertRef.current.classList.add('alert-info', 'd-block');
-            alertRef.current.textContent = data.message;
+            showAlertSuccess(data);
 
             cleanInputs();
-
-            setTimeout(() => {
-                alertRef.current.classList.add('d-none');
-            }, 3000);
 
         });
 
     }
 
+    function handleSearch() {
+
+        if(validateInputsSearch() == false){
+            return;
+        }
+
+        const URL = `http://localhost:8000/api/tiendas/show/${codigoRef.current.value}`;
+
+        fetch(URL, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+
+            }
+        }).then(res => res.json()).then(data => {
+
+            if (!data.success) {
+
+                showAlertDanger(data);
+                return;
+            }
+
+            nombreRef.current.value = data.tienda.nombre;
+            codigoRef.current.value = data.tienda.codigo_tienda;
+
+        });
+
+    }
+
+    function handleDelete() {
+
+        if(validateInputsSearch() == false){
+            return;
+        }
+
+        const URL = `http://localhost:8000/api/tiendas/destroy/${codigoRef.current.value}`;
+
+        fetch(URL, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+
+            }
+        }).then(res => res.json()).then(data => {
+
+            if (!data.success) {
+
+                showAlertDanger(data);
+                return;
+            }
+
+            showAlertSuccess(data);
+
+            cleanInputs();
+
+        });
+    }
+
+    function cleanInputs()
+    { 
+        nombreRef.current.value = "";
+        codigoRef.current.value = "";  
+    }
+
+    function showAlertSuccess(data)
+    {
+        alertRef.current.classList.remove('d-none', 'alert-danger');
+        alertRef.current.classList.add('alert-info', 'd-block');
+        alertRef.current.textContent = data.message;
+
+        setTimeout(() => {
+            alertRef.current.classList.add('d-none');
+        }, 3000);
+    }
+
+    function showAlertDanger(data)
+    {
+        alertRef.current.classList.remove('d-none', 'alert-info');
+        alertRef.current.classList.add('alert-danger');
+        alertRef.current.textContent = data.message;
+        setTimeout(() => {
+            alertRef.current.classList.add('d-none');
+        }, 3000);
+    }
+
     function validateInputsCreate()
     {
-        if(nombreRef.current.value === "" && codigoRef.current.value === "")
+        if(nombreRef.current.value == "" || codigoRef.current.value == "")
         {
 
             alertRef.current.classList.remove('d-none', 'alert-info');
@@ -95,45 +171,6 @@ export const TiendaView = () => {
         }
     }
 
-    function handleSearch() {
-
-        if(!validateInputsSearch()) return 
-
-        const URL = `http://localhost:8000/api/tiendas/show/${codigoRef.current.value}`;
-
-        fetch(URL, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-
-            }
-        }).then(res => res.json()).then(data => {
-
-            if (!data.success) {
-
-                alertRef.current.classList.remove('d-none', 'alert-info');
-                alertRef.current.classList.add('alert-danger');
-                alertRef.current.textContent = "Los datos introducidos son incorrectos, por favor verificarlos";
-                return;
-            }
-
-            nombreRef.current.value = data.tienda.nombre;
-            codigoRef.current.value = data.tienda.codigo_tienda;
-
-            setTimeout(() => {
-                alertRef.current.classList.add('d-none');
-            }, 3000);
-
-        });
-
-    }
-
-    function cleanInputs()
-    { 
-        nombreRef.current.value = "";
-        codigoRef.current.value = "";  
-    }
 
     return (
         <>
@@ -195,7 +232,7 @@ export const TiendaView = () => {
                                                             <input className="btn-limpiar  btn-lg mb-2" type="button" value="limpiar" onClick={cleanInputs} />
                                                         </div>
                                                         <div className="col-6 col-sm-3 d-flex justify-content-center">
-                                                            <input className="btn-delete btn-lg mb-2" type="button" value="Eliminar" />
+                                                            <input className="btn-delete btn-lg mb-2" type="button" value="Eliminar" onClick={handleDelete}/>
                                                         </div>
                                                     </div>
                                                 </div>
