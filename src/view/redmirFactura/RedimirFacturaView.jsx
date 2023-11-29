@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { CustomInput } from '../../components/global/CustomInput';
-import { CustomSelect } from '../../components/global/CustomSelect';
 import './cssRedimirFactura.css';
 import { Alerts } from '../../components/customHooks/Alerts';
 
@@ -10,332 +8,19 @@ export const RedimirFacturaView = () => {
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem("user"))
 
-    const {alertRef, showAlertDanger, showAlertSuccess} = Alerts();
+    const [campanas, setCampanas] = useState([]);
+    const [valorARedimir, setValorARedimir] = useState(0);
+    const [cliente, setCliente] = useState({ numero_documento: '', nombre: '', apellidos: '' });
+    const [facturas, setFacturas] = useState(null);
 
-    const [campañas, setCampañas] = useState([]);
-    const [visibeButton, setVisibeButton] = useState(false);
-    const [facturas, setFacturas] = useState([]);
-    const [datos, setDatos] = useState([]);
-    const [tickets, setTicket] = useState([]);
-    const [clienteFound, setClienteFound] = useState(null);
-    const [mode, setMode] = useState('create');
-
-    const nombreRef = useRef();
-    const apellidoRef = useRef();
     const numeroDocumentoRef = useRef();
-    const campañaRef = useRef();
+    const campanaRef = useRef();
 
+    const { alertRef, showAlertDanger, showAlertSuccess } = Alerts();
 
-    var i = 0;
+    function handleSearchClient() {
 
-    //metodo crear cliente
-    function handleSubmit(e) {
-
-        e.preventDefault();
-
-        const cliente = {
-            profesion_id: profesionRef.current.value,
-            tipo_documento_id: tipoDocumentoRef.current.value,
-            nombre: nombreRef.current.value,
-            apellidos: apellidoRef.current.value,
-            email: emailRef.current.value,
-            telefono: telefonoRef.current.value,
-            direccion: direccionRef.current.value,
-            fecha_nacimiento: fechaNacimientoRef.current.value,
-            hijos: hijosRef.current.value,
-            numero_documento: numeroDocumentoRef.current.value,
-
-            user_id: 1
-        }
-
-        console.log(cliente)
-
-        const URL = mode == 'create' ? 'http://localhost:8000/api/clientes/store' : `http://localhost:8000/api/clientes/update/${clienteFound.numero_documento}`;
-
-        fetch(URL, {
-            method: mode == 'create' ? 'POST' : 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-
-            },
-            body: JSON.stringify(cliente)
-        }).then(res => res.json()).then(data => {
-
-            if (!data.success) {
-
-                alertRef.current.classList.remove('d-none', 'alert-info');
-                alertRef.current.classList.add('alert-danger');
-                alertRef.current.textContent = "Los datos introducidos son incorrectos, por favor verificarlos";
-                // Desplazarse al inicio de la vista
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                return;
-
-            }
-
-
-            alertRef.current.classList.remove('d-none', 'alert-danger');
-            alertRef.current.classList.add('alert-info', 'd-block');
-            alertRef.current.textContent = data.message;
-
-
-
-            setMode('create');
-
-
-            // Desplazarse al inicio de la vista
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            cleanInputs();
-            setClienteFound(null);
-
-            setTimeout(() => {
-                alertRef.current.classList.add('d-none');
-            }, 3000);
-
-        });
-
-
-
-
-    }
-
-    //metodo para buscar cliente
-    function handleSearchCliente(e) {
-
-        e.preventDefault();
-
-        const cliente = {
-
-            numero_documento: numeroDocumentoRef.current.value,
-            campaña_id: 1,
-        }
-
-
-
-        console.log(numeroDocumentoRef.current.value);
-        fetch(`http://localhost:8000/api/facturas/show`, {
-            method: 'POST',
-
-            headers: {
-                'Content-Type': 'application/json',
-                // 'Authorization': `Bearer ${token}`
-
-            },
-            body: JSON.stringify(cliente)
-        }).then(res => res.json()).then(data => {
-
-            // setMode('create');
-
-            if (data.success == false) {
-                setClienteFound(null);
-                alertRef.current.classList.remove('d-none', 'alert-info');
-                alertRef.current.classList.add('alert-danger', 'd-block');
-                alertRef.current.textContent = data.message;
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-
-                return;
-            }
-
-            setVisibeButton(true);
-
-            // Desplazarse al inicio de la vista
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            alertRef.current.classList.add('d-none', 'alert-info');
-            alertRef.current.classList.remove('alert-danger', 'd-block');
-            alertRef.current.textContent = data.message;
-
-            console.log('usuario', data.data);
-
-            setClienteFound(data.data);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            // cleanInputs();
-        });
-
-    }
-
-    //metodo para eliminar un usuario
-    function handleDestroy() {
-        if (clienteFound == null) {
-            // Desplazarse al inicio de la vista
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            alertRef.current.classList.remove('d-none', 'alert-danger');
-            alertRef.current.classList.add('alert-info', 'd-block');
-            alertRef.current.textContent = "Digite el numero de documento del cliente a eliminar";
-
-        } else {
-            fetch(`http://localhost:8000/api/clientes/delete/${clienteFound.numero_documento}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // 'Authorization': `Bearer ${token}`
-
-                }
-            }).then(res => res.json()).then(data => {
-
-                cleanInputs();
-                alertRef.current.classList.remove('d-none', 'alert-danger');
-                alertRef.current.classList.add('alert-info', 'd-block');
-                alertRef.current.textContent = data.message;
-                setClienteFound(null);
-                setMode('create');
-                // Desplazarse al inicio de la vista
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                setTimeout(() => {
-                    alertRef.current.classList.add('d-none');
-                }, 3000);
-
-            });
-        }
-    }
-
-    //metodo para buscar facturas
-    function handleSearchFacutras(e) {
-
-        e.preventDefault();
-
-        const cliente = {
-
-            numero_documento: numeroDocumentoRef.current.value,
-            campaña_id: campañaRef.current.value,
-        }
-
-
-
-        console.log(numeroDocumentoRef.current.value);
-        fetch(`http://localhost:8000/api/facturas/show`, {
-            method: 'POST',
-
-            headers: {
-                'Content-Type': 'application/json',
-                // 'Authorization': `Bearer ${token}`
-
-            },
-            body: JSON.stringify(cliente)
-        }).then(res => res.json()).then(data => {
-
-            // setMode('create');
-
-            if (data.success == false) {
-                setClienteFound(null);
-                alertRef.current.classList.remove('d-none', 'alert-info');
-                alertRef.current.classList.add('alert-danger', 'd-block');
-                alertRef.current.textContent = data.message;
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-
-                return;
-            }
-
-            if (data.data.length == 0) {
-
-                alertRef.current.classList.remove('d-none', 'alert-info');
-                alertRef.current.classList.add('alert-danger', 'd-block');
-                alertRef.current.textContent = "No se encontraron facturas para redimir";
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-
-                return;
-            }
-
-
-
-            // Desplazarse al inicio de la vista
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            alertRef.current.classList.add('d-none', 'alert-info');
-            alertRef.current.classList.remove('alert-danger', 'd-block');
-            alertRef.current.textContent = "Facturas encontradas";
-
-            console.log(data);
-
-            setFacturas(data.data);
-            setDatos(data);
-            console.log('datos', datos);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            // cleanInputs();
-        });
-
-    }
-
-    // Método para redimir
-    async function handleRedimir(e) {
-
-        e.preventDefault();
-
-        console.log('clienteFound:', clienteFound);
-        console.log('facturas:', facturas);
-
-        const cliente = {
-            cliente_id: clienteFound.id,
-            campaña_id: campañaRef.current.value,
-        };
-
-        const factura = {
-
-            numero_documento: numeroDocumentoRef.current.value,
-            campaña_id: campañaRef.current.value,
-        }
-
-        console.log(cliente);
-        console.log(factura);
-
-        try {
-            const response = await fetch('http://localhost:8000/api/facturas/redimir', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(cliente),
-            });
-
-            const facturas  = await fetch('http://localhost:8000/api/facturas/show', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(factura),
-            });
-   
-
-            const datafactura = await facturas.json(); 
-                   
-
-            const data = await response.json();
-
-            console.log('data', datafactura.data);
-
-
-            setTicket(data.ticketsRedimidos)
-            setFacturas(datafactura.data);
-            setDatos(datafactura)
-            console.log('tickets', data.ticketsRedimidos);
-
-            alertRef.current.classList.remove('d-none', 'alert-danger');
-            alertRef.current.classList.add('alert-info', 'd-block');
-            alertRef.current.textContent = data.message;
-
-
-
-            console.log('fctur', data);
-
-
-            // Desplazarse al inicio de la vista
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setTimeout(() => {
-                alertRef.current.classList.add('d-none');
-            }, 3000);
-           
-        } catch (error) {
-            console.error('Error al redimir factura:', error);
-        }
-    }
-
-    /*metodo para obtener los datos de la api consultar profesiones , tipoDocumentos*/
-    useEffect(() => {
-
-        fetch("http://localhost:8000/api/facturas/info-factura", {
+        fetch(`http://localhost:8000/api/facturas/show/cliente/${numeroDocumentoRef.current.value}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -344,48 +29,50 @@ export const RedimirFacturaView = () => {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
 
-                const campañas = data.data.campanas.map(campaña => {
-                    return {
-                        value: campaña.id,
-                        label: campaña.nombre
-                    }
-                });
-
-                setCampañas(campañas);
+                if (!data.success) {
+                    showAlertDanger(data);
+                    return
+                }
+                const { data: cliente } = data;
+                setCliente(cliente);
+                showAlertSuccess(data);
 
             }).catch(error => console.log(error));
+    }
 
-    }, [])
+    function handleSearchFacturas() {
 
+        const numero_documento = numeroDocumentoRef.current.value;
+        const campaña_id = campanaRef.current.value;
 
-    //metodo para buscar cliente
-    function handleSearchCliente(e) {
+        const credentials = {
+            numero_documento,
+            campaña_id
+        };
 
-        e.preventDefault();
-
-        fetch(`http://localhost:8000/api/clientes/show/${numeroDocumentoRef.current.value}`, {
-            method: 'GET',
+        const requestOptions = {
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(credentials),
+        };
 
-            }
-        }).then(res => res.json()).then(data => {
+        fetch("http://localhost:8000/api/facturas/show", requestOptions)
+            .then((response) => response.json())
+            .then(data => {
 
-            if (data.success == false) {
-                setClienteFound(null);
-                showAlertDanger(data);
-                return;
-            }
+                if (data.success === false) {
+                    showAlertDanger(data);
+                    return;
+                }
 
-            setClienteFound(data.data);
-            setMode('update')
-            showAlertSuccess(data);
-            setVisibeButton(true);
-        });
-
+                setFacturas(data.data);
+                setValorARedimir(data.totalARedimir)
+                showAlertSuccess(data);
+            })
     }
 
     function formatfecha(fechaCompleta) {
@@ -411,29 +98,31 @@ export const RedimirFacturaView = () => {
         return montoFormateado;
     }
 
-    function cleanInputs() {
-        setClienteFound(null);
-        nombreRef.current.value = '';
-        apellidoRef.current.value = '';
-        emailRef.current.value = '';
-        telefonoRef.current.value = '';
-        direccionRef.current.value = '';
-        hijosRef.current.value = '';
-        numeroDocumentoRef.current.value = '';
+    /*metodo para obtener los datos de la api consultar profesiones , tipoDocumentos*/
+    useEffect(() => {
 
-        fechaNacimientoRef.current.value = null;
+        fetch("http://localhost:8000/api/facturas/info-factura", {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(res => res.json())
+            .then(data => {
 
-        nombreRef.current.clearInputField();
-        apellidoRef.current.clearInputField();
-        numeroDocumentoRef.current.clearInputField();
-        emailRef.current.clearInputField();
-        telefonoRef.current.clearInputField();
-        direccionRef.current.clearInputField();
-        fechaNacimientoRef.current.clearInputField();
-        hijosRef.current.clearInputField();
-        numeroDocumentoRef.current.clearInputField();
+                const campañas = data.data.campanas.map(campaña => {
+                    return {
+                        value: campaña.id,
+                        nombre: campaña.nombre
+                    }
+                });
 
-    }
+                setCampanas(campañas);
+
+            }).catch(error => console.log(error));
+
+    }, [])
 
     return (
         <>
@@ -442,7 +131,6 @@ export const RedimirFacturaView = () => {
                 <div className="row  m-2">
                     <h2 className="tituloTabla text-center mb-4 mt-4">REDIMIR FACTURA</h2>
 
-
                     <div className="alert alert-info d-none" role="alert" ref={alertRef}></div>
 
                     <div className=" col-sm-12  col-lg-5 col-md-12 col-12 mb-5 mb-lg-0 mt-lg-3 mt-4 mb-4">
@@ -450,7 +138,7 @@ export const RedimirFacturaView = () => {
                         <div className="card bg-glass custom-form mt-5" style={{ borderRadius: '26px' }}>
                             <div className="card-body px-4 py-4 px-md-5">
                                 <h1 style={{ textAlign: 'center' }}>Datos del cliente</h1>
-                                <form onSubmit={handleSubmit}>
+                                <div>
                                     {/* formulario  */}
                                     <div className="form-row">
                                         <div className="col-md-12 mb-4">
@@ -460,13 +148,7 @@ export const RedimirFacturaView = () => {
                                                         <label className="form-label" htmlFor="form3Example3">
                                                             Numero de documento
                                                         </label>
-                                                        <CustomInput
-                                                            labelPlaceholder="N° 1231282"
-                                                            idInput="formCelular"
-                                                            type="tel"
-                                                            elementReferenced={numeroDocumentoRef}
-                                                            value={clienteFound ? clienteFound.numero_documento : ''}
-                                                        />
+                                                        <input type="text" className='form-control' ref={numeroDocumentoRef} />
                                                     </div>
                                                 </div>
                                             </div>
@@ -476,13 +158,7 @@ export const RedimirFacturaView = () => {
                                                         <label className="form-label" htmlFor="form3Example1">
                                                             Nombres completo
                                                         </label>
-                                                        <CustomInput
-                                                            labelPlaceholder="Nombre cliente"
-                                                            idInput="formNombre"
-                                                            type="text"
-                                                            elementReferenced={nombreRef}
-                                                            value={clienteFound ? clienteFound.nombre : ''}
-                                                        />
+                                                        <input type="text" className='form-control' value={cliente.nombre} />
                                                     </div>
                                                 </div>
                                                 <div className="col-md-6 mb-4">
@@ -490,13 +166,7 @@ export const RedimirFacturaView = () => {
                                                         <label className="form-label" htmlFor="form3Example2">
                                                             Apellidos
                                                         </label>
-                                                        <CustomInput
-                                                            labelPlaceholder="apellido cliente"
-                                                            idInput="formApellido"
-                                                            type="text"
-                                                            elementReferenced={apellidoRef}
-                                                            value={clienteFound ? clienteFound.apellidos : ''}
-                                                        />
+                                                        <input type="text" className='form-control' value={cliente.apellidos} />
                                                     </div>
                                                 </div>
                                             </div>
@@ -505,33 +175,35 @@ export const RedimirFacturaView = () => {
                                                     <label className="form-label" htmlFor="form3Example1">
                                                         Campañas
                                                     </label>
-                                                    <CustomSelect
-                                                        options={campañas}
-                                                        elementReferenced={campañaRef}
-                                                    // value={clienteFound ? clienteFound.profesion_id : ''}
-                                                    />
+                                                    <select name="" id="" className='form-select' ref={campanaRef}>
+                                                        {
+                                                            campanas.map((campaña, index) => {
+                                                                return <option key={index} value={campaña.value}>{campaña.nombre}</option>
+                                                            })
+                                                        }
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div className="row justify-space-around ">
                                                 <div className="col-12 col-sm-3  col-md-4 col-lg-6 d-flex justify-content-center">
-                                                    <input className="btn-consultar btn-lg mb-3" type="button" value="Consultar cliente" onClick={handleSearchCliente} />
+                                                    <input className="btn-consultar btn-lg mb-3" type="button" value="Consultar cliente" onClick={handleSearchClient} />
                                                 </div>
 
                                                 <div className="col-12 col-sm-3 col-lg-6 col-md-4 d-flex justify-content-center">
-                                                    {visibeButton && (<input className="btn-save btn-lg btn-md mb-3" type="submit" value="Consultar Facturas" onClick={handleSearchFacutras} />)}
+                                                    <input className="btn-save btn-lg btn-md mb-3" type="submit" value="Consultar Facturas" onClick={handleSearchFacturas} />
                                                 </div>
-
 
                                                 <div className="col-6 col-sm-3 col-lg-6 col-md-4 d-flex justify-content-center">
-                                                    <input className="btn-limpiar  btn-lg mb-3" type="button" value="Redimir saldo" onClick={handleRedimir} />
+                                                    <input className="btn-limpiar  btn-lg mb-3" type="button" value="Redimir saldo" />
                                                 </div>
+
                                                 <div className="col-6 col-sm-3 col-lg-6 col-md-12 d-flex justify-content-center">
-                                                    <input className="btn-delete btn-lg mb-2" type="button" value="Imprimir ticket" onClick={handleDestroy} />
+                                                    <input className="btn-delete btn-lg mb-2" type="button" value="Imprimir ticket" />
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </form>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -541,7 +213,6 @@ export const RedimirFacturaView = () => {
                             <table class="table table-bordered table-alternate">
                                 <thead>
                                     <tr>
-                                        <th scope="col">#</th>
                                         <th scope="col">Tienda</th>
                                         <th scope="col">N° Facutra</th>
                                         <th scope="col">Fecha</th>
@@ -549,25 +220,22 @@ export const RedimirFacturaView = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {facturas && (
-                                        facturas.map(facturas => (
+                                    { facturas ? (
 
-                                            <tr key={facturas.id}>
-                                                <th scope="row">{i++}</th>
-                                                <td>{facturas.nombre_tienda}</td>
-                                                <td>{facturas.numero_factura}</td>
-                                                <td>{formatfecha(facturas.created_at)}</td>
-                                                <td>{formatearMonedaCOP(facturas.valor_factura)}</td>
-                                                {/* <td className="d-flex gap-2">
-                                                <button className="btn btn-primary btn-sm" onClick={handleEditClient}>Editar</button>
-                                                <button className="btn btn-danger btn-sm" onClick={handleDestroy}>Eliminar</button>
-                                            </td> */}
+                                        facturas.map((factura, index) => {
+                                            return <tr key={index}>
+                                                <td>{factura.nombre_tienda}</td>
+                                                <td>{factura.numero_factura}</td>
+                                                <td>{formatfecha(factura.created_at)}</td>
+                                                <td>{formatearMonedaCOP(factura.valor_factura)}</td>
                                             </tr>
+                                        })
+                                    ) : (
+                                        <tr><td style={{ textAlign: 'center' }} colSpan={4}>No hay facturas</td></tr>
+                                    )
 
-                                        )
-                                        )
 
-                                    )}
+                                    }
                                 </tbody>
                             </table>
                         </div>
@@ -579,14 +247,7 @@ export const RedimirFacturaView = () => {
                                     Saldo por redimir
                                 </label>
                                 <div className="form-outline">
-                                    <CustomInput
-                                        labelPlaceholder="Saldo por redimir"
-                                        idInput="formSaldoPorRedimir"
-                                        type="text"
-                                        elementReferenced={apellidoRef}
-                                        value={datos ? formatearMonedaCOP(datos.totalARedimir) : ''}
-                                        disabled={true}
-                                    />
+                                    <input type="text" className='form-control' value={formatearMonedaCOP(valorARedimir)}/>
                                 </div>
                             </div>
 
@@ -595,7 +256,7 @@ export const RedimirFacturaView = () => {
 
                         <h2 className="tituloTabla text-center mt-4 mb-4">TICKETS</h2>
                         <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
-                            <table class="table table-bordered table-alternate">
+                            <table className="table table-bordered table-alternate">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -605,31 +266,9 @@ export const RedimirFacturaView = () => {
                                 </thead>
                                 <tbody>
 
-                                    {tickets && (
-
-                                        tickets.map(tickets => (
-
-                                            <tr key={i + 1}>
-                                                <th scope="row">{i++}</th>
-                                                <td>{tickets.numero}</td>
-                                                {/* <td className="d-flex gap-2">
-                                                <button className="btn btn-primary btn-sm" onClick={handleEditClient}>Editar</button>
-                                                <button className="btn btn-danger btn-sm" onClick={handleDestroy}>Eliminar</button>
-                                            </td> */}
-                                            </tr>
-
-                                        )
-                                        )
-
-                                    )}
-
                                 </tbody>
                             </table>
                         </div>
-
-
-
-
 
                     </div>
                 </div>
