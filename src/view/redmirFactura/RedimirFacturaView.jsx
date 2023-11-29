@@ -9,8 +9,9 @@ export const RedimirFacturaView = () => {
     const user = JSON.parse(localStorage.getItem("user"))
 
     const [campanas, setCampanas] = useState([]);
+    const [tickes, setTickets] = useState([]);
     const [valorARedimir, setValorARedimir] = useState(0);
-    const [cliente, setCliente] = useState({ numero_documento: '', nombre: '', apellidos: '' });
+    const [cliente, setCliente] = useState({ numero_documento: '', nombre: '', apellidos: '', id: '' });
     const [facturas, setFacturas] = useState(null);
 
     const numeroDocumentoRef = useRef();
@@ -96,6 +97,40 @@ export const RedimirFacturaView = () => {
         }).format(monto);
 
         return montoFormateado;
+    }
+
+    function handleRedimirFacturas() 
+    {
+        const campaña_id = campanaRef.current.value;
+        const cliente_id = cliente.id;
+
+        const credentials = {
+            campaña_id,
+            cliente_id
+        };
+
+        const requestOptions = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(credentials),
+        };
+
+        fetch("http://localhost:8000/api/facturas/redimir", requestOptions)
+            .then((response) => response.json())
+            .then(data => {
+
+                if (data.success === false) {
+                    showAlertDanger(data);
+                    return;
+                }
+
+                setTickets(data.ticketsRedimidos);
+                handleSearchFacturas()
+                showAlertSuccess(data);
+            })
     }
 
     /*metodo para obtener los datos de la api consultar profesiones , tipoDocumentos*/
@@ -194,7 +229,7 @@ export const RedimirFacturaView = () => {
                                                 </div>
 
                                                 <div className="col-6 col-sm-3 col-lg-6 col-md-4 d-flex justify-content-center">
-                                                    <input className="btn-limpiar  btn-lg mb-3" type="button" value="Redimir saldo" />
+                                                    <input className="btn-limpiar  btn-lg mb-3" type="button" value="Redimir saldo" onClick={handleRedimirFacturas}/>
                                                 </div>
 
                                                 <div className="col-6 col-sm-3 col-lg-6 col-md-12 d-flex justify-content-center">
@@ -261,11 +296,20 @@ export const RedimirFacturaView = () => {
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col">No Ticket Asignado</th>
-
                                     </tr>
                                 </thead>
                                 <tbody>
-
+                                    {
+                                        tickes ? (
+                                            tickes.map((ticket, index) => {
+                                                return <tr key={index}>
+                                                    <td>{index + 1}</td>
+                                                    <td>{ticket.numero}</td>
+                                                </tr>
+                                            })
+                                        ): 
+                                        (<tr><td style={{ textAlign: 'center' }} colSpan={4}>No hay tickets</td></tr>)
+                                    }
                                 </tbody>
                             </table>
                         </div>
