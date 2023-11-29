@@ -2,42 +2,31 @@ import React, { useState, useEffect, useRef } from 'react';
 import { CustomInput } from '../../components/global/CustomInput';
 import { CustomSelect } from '../../components/global/CustomSelect';
 import './cssRedimirFactura.css';
+import { Alerts } from '../../components/customHooks/Alerts';
 
 
 export const RedimirFacturaView = () => {
-    //
-    const [profesiones, setProfesiones] = useState([]);
-    const [tiposDocumentos, setTipoDocumentos] = useState([]);
+
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem("user"))
+
+    const {alertRef, showAlertDanger, showAlertSuccess} = Alerts();
+
     const [campañas, setCampañas] = useState([]);
     const [visibeButton, setVisibeButton] = useState(false);
     const [facturas, setFacturas] = useState([]);
     const [datos, setDatos] = useState([]);
     const [tickets, setTicket] = useState([]);
-    //
-
-
     const [clienteFound, setClienteFound] = useState(null);
-
     const [mode, setMode] = useState('create');
-    //
-    const token = localStorage.getItem('token');
-    const profesionRef = useRef();
-    const tipoDocumentoRef = useRef();
+
     const nombreRef = useRef();
     const apellidoRef = useRef();
-    const emailRef = useRef();
-    const telefonoRef = useRef();
-    const direccionRef = useRef();
-    const fechaNacimientoRef = useRef();
-    const hijosRef = useRef();
     const numeroDocumentoRef = useRef();
     const campañaRef = useRef();
-    //
-    const alertRef = useRef();
+
 
     var i = 0;
-
-    // const user = JSON.parse(localStorage.getItem('user'));
 
     //metodo crear cliente
     function handleSubmit(e) {
@@ -346,32 +335,27 @@ export const RedimirFacturaView = () => {
     /*metodo para obtener los datos de la api consultar profesiones , tipoDocumentos*/
     useEffect(() => {
 
-        fetch("http://localhost:8000/api/campañas/", {
+        fetch("http://localhost:8000/api/facturas/info-factura", {
             method: 'GET',
             headers: {
-                // 'Authorization': `Bearer ${token}`,
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
         })
             .then(res => res.json())
             .then(data => {
-
                 console.log(data);
 
-                const campañas = data.data.map(campaña => {
+                const campañas = data.data.campanas.map(campaña => {
                     return {
                         value: campaña.id,
                         label: campaña.nombre
                     }
                 });
 
-
                 setCampañas(campañas);
 
-                console.log(campañas);
-
             }).catch(error => console.log(error));
-
 
     }, [])
 
@@ -381,51 +365,28 @@ export const RedimirFacturaView = () => {
 
         e.preventDefault();
 
-
-
-        console.log(numeroDocumentoRef.current.value);
         fetch(`http://localhost:8000/api/clientes/show/${numeroDocumentoRef.current.value}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                // 'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`
 
             }
         }).then(res => res.json()).then(data => {
 
-            // setMode('create');
-
             if (data.success == false) {
                 setClienteFound(null);
-                alertRef.current.classList.remove('d-none', 'alert-info');
-                alertRef.current.classList.add('alert-danger', 'd-block');
-                alertRef.current.textContent = data.message;
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-
+                showAlertDanger(data);
                 return;
             }
-            setMode('update')
 
-            // Desplazarse al inicio de la vista
-            window.scrollTo({ top: 0, behavior: 'smooth' });
             setClienteFound(data.data);
-            alertRef.current.classList.add('d-none', 'alert-info');
-            alertRef.current.classList.remove('alert-danger', 'd-block');
-            alertRef.current.textContent = 'Cliente encontrado';
-
-            console.log(data.data);
-
-
-
-
+            setMode('update')
+            showAlertSuccess(data);
             setVisibeButton(true);
-            // window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            // cleanInputs();
         });
 
     }
-    //
 
     function formatfecha(fechaCompleta) {
         const fechaFormat = new Date(fechaCompleta);
@@ -472,13 +433,7 @@ export const RedimirFacturaView = () => {
         hijosRef.current.clearInputField();
         numeroDocumentoRef.current.clearInputField();
 
-
-
     }
-
-
-
-
 
     return (
         <>
