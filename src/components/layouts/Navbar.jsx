@@ -97,6 +97,18 @@ export const Navbar = () => {
                                     <li><a className="dropdown-item" href="#">tickets por cliente</a></li>
                                     <li><a className="dropdown-item" href="#">campañas habilitadas</a></li>
                                     <li><a className="dropdown-item" href="#">facturas redimidas</a></li>
+                                    <Link className="nav-item text-decoration-none" to="/consultar-profesiones">
+                                        <span className="nav-link active">Consultar Profesiones</span>
+                                    </Link>
+                                    <Link className="nav-item text-decoration-none" to="/consultar-campañas">
+                                        <span className="nav-link active">Consultar Campañas</span>
+                                    </Link>
+                                    <Link className="nav-item text-decoration-none" to="/consultar-tiendas">
+                                        <span className="nav-link active">Consultar Tiendas</span>
+                                     </Link> 
+                                    <Link className="nav-item text-decoration-none" to="/tienda-estadistica">
+                                        <span className="nav-link active">estadistica por tienda</span>  
+                                    </Link>
                                 </ul>
                             </li>
                         </ul>
