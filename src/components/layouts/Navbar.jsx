@@ -72,6 +72,9 @@ export const Navbar = () => {
                                     <Link className="nav-item text-decoration-none" to="/redimir-facturas">
                                         <span className="nav-link active">Redimir Facturas</span>
                                     </Link>
+                                    <Link className="nav-item text-decoration-none" to="/estado-cliente">
+                                        <span className="nav-link active">Estado cliente</span>
+                                    </Link>
                                 </ul>
                             </li>
                             <li className="nav-item dropdown">

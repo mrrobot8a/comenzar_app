@@ -13,6 +13,7 @@ import { ProfesionView } from "./view/profesiones/ProfesionView"
 import { TiendaView } from "./view/Tienda/TiendaView"
 import { DocumentoView } from "./view/documento/DocumentoView"
 import { LoginView } from "./view/login/LoginView"
+import { TicketsAsignados } from "./view/ticket/TicketsAsignados"
 
 
 export const App = () => {
@@ -41,6 +42,7 @@ export const App = () => {
         <Route path="/campañas" element={<CampañaView />}></Route>
         <Route path="/facturas" element={<FacturaView />}></Route>
         <Route path="/redimir-facturas" element={<RedimirFacturaView />}></Route>
+        <Route path="/estado-cliente" element={<TicketsAsignados />}></Route>
         <Route path="/consultar-ticket" element={<ConsultarTickets />}></Route>
         <Route path="/tiendas" element={<TiendaView />}></Route>
         <Route path="/*">"404 Not Found"</Route>
