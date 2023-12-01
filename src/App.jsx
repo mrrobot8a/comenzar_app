@@ -16,6 +16,7 @@ import { ConsultarCampañas } from "./view/campaña/ConsultarCampañas"
 import { ConsultarProfesiones } from "./view/profesiones/consultarProfesiones"
 import { TiendaEstadistica } from "./view/Tienda/TiendaEstadistica"
 
+import { TicketsAsignados } from "./view/ticket/TicketsAsignados"
 
 
 export const App = () => {
@@ -45,6 +46,7 @@ export const App = () => {
         <Route path="/consultar-campañas" element={<ConsultarCampañas/>}></Route>
         <Route path="/facturas" element={<FacturaView />}></Route>
         <Route path="/redimir-facturas" element={<RedimirFacturaView />}></Route>
+        <Route path="/estado-cliente" element={<TicketsAsignados />}></Route>
         <Route path="/consultar-ticket" element={<ConsultarTickets />}></Route>
         <Route path="/tiendas" element={<TiendaView />}></Route>
         <Route path="/tienda-estadistica" element={< TiendaEstadistica />}></Route>
