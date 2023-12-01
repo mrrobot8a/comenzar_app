@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './cssRedimirFactura.css';
 import { Alerts } from '../../components/customHooks/Alerts';
+import { Ticket } from '../../components/pdf/Ticket';
 
 
 export const RedimirFacturaView = () => {
@@ -98,6 +99,16 @@ export const RedimirFacturaView = () => {
 
         return montoFormateado;
     }
+
+    const handleImprimir = () => {
+        
+        Ticket.imprimirDirectamente(
+            tickes,cliente.nombre+' '+cliente.apellidos,cliente.numero_documento,
+            cliente.telefono,cliente.direccion,cliente.email
+            );
+
+            setTickets([]);
+    };
 
     function handleRedimirFacturas() 
     {
@@ -233,7 +244,7 @@ export const RedimirFacturaView = () => {
                                                 </div>
 
                                                 <div className="col-6 col-sm-3 col-lg-6 col-md-12 d-flex justify-content-center">
-                                                    <input className="btn-delete btn-lg mb-2" type="button" value="Imprimir ticket" />
+                                                    <input className="btn-delete btn-lg mb-2" type="button" value="Imprimir ticket"  onClick={handleImprimir} />
                                                 </div>
                                             </div>
                                         </div>
