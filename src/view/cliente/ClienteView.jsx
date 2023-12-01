@@ -2,18 +2,20 @@ import React, { useState, useEffect, useRef } from 'react';
 
 import { CustomInput } from '../../components/global/CustomInput';
 import { CustomSelect } from '../../components/global/CustomSelect';
-import '../../components/cliente/css/cssClienteview.css';
-import { Alerts } from '../../components/customHooks/Alerts';
+import '../cliente/Cliente.css';
 
 export const ClienteView = () => {
 
-    const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem("user"))
     
     const [profesiones, setProfesiones] = useState([]);
     const [tiposDocumentos, setTipoDocumentos] = useState([]);
+
     const [clienteFound, setClienteFound] = useState(null);
-    const [mode, setMode] = useState('create'); 
+
+    const [mode, setMode] = useState('create');
+    
+    const token = localStorage.getItem('token');
 
     const profesionRef = useRef();
     const tipoDocumentoRef = useRef();
@@ -26,8 +28,7 @@ export const ClienteView = () => {
     const hijosRef = useRef();
     const numeroDocumentoRef = useRef();
     const mascotasRef = useRef();
-
-    const {alertRef, showAlertDanger, showAlertSuccess} = Alerts();
+    const alertRef = useRef();
 
     
     //metodo crear cliente
@@ -63,17 +64,35 @@ export const ClienteView = () => {
         }).then(res => res.json()).then(data => {
 
             if (!data.success) {
-                showAlertDanger(data);
-                return;
-            }
 
-            showAlertSuccess(data);           
+                alertRef.current.classList.remove('d-none', 'alert-info');
+                alertRef.current.classList.add('alert-danger');
+                alertRef.current.textContent = "Los datos introducidos son incorrectos, por favor verificarlos";
+                // Desplazarse al inicio de la vista
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+
+            }
+            
+
+            alertRef.current.classList.remove('d-none', 'alert-danger');
+            alertRef.current.classList.add('alert-info', 'd-block');
+            alertRef.current.textContent = data.message;
+
+            
            
             setMode('create');
+            
+
+            // Desplazarse al inicio de la vista
+            window.scrollTo({ top: 0, behavior: 'smooth' });
 
             cleanInputs();
-
             setClienteFound(null);
+
+            setTimeout(() => {
+                alertRef.current.classList.add('d-none');
+            }, 3000);
 
         });
 
@@ -84,23 +103,44 @@ export const ClienteView = () => {
 
         e.preventDefault();
  
+      
+
+        console.log(numeroDocumentoRef.current.value);
         fetch(`http://localhost:8000/api/clientes/show/${numeroDocumentoRef.current.value}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                // 'Authorization': `Bearer ${token}`
 
             }
         }).then(res => res.json()).then(data => {
 
+            // setMode('create');
+
             if (data.success == false) {
                 setClienteFound(null);
-                showAlertDanger(data);
+                alertRef.current.classList.remove('d-none', 'alert-info');
+                alertRef.current.classList.add('alert-danger', 'd-block');
+                alertRef.current.textContent = data.message;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+               
                 return;
             }
             setMode('update')
-            showAlertSuccess(data);
+
+            // Desplazarse al inicio de la vista
+             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            alertRef.current.classList.add('d-none', 'alert-info');
+            alertRef.current.classList.remove('alert-danger', 'd-block');
+            alertRef.current.textContent = data.message;
+
+            console.log(data.data);
+
             setClienteFound(data.data);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // cleanInputs();
         });
 
     }
@@ -108,26 +148,37 @@ export const ClienteView = () => {
     //metodo para eliminar un usuario
     function handleDestroy()
     {
+        if (clienteFound == null) {
+            // Desplazarse al inicio de la vista
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            alertRef.current.classList.remove('d-none', 'alert-danger');
+            alertRef.current.classList.add('alert-info', 'd-block');
+            alertRef.current.textContent = "Digite el numero de documento del cliente a eliminar";
+
+        }else{
         fetch(`http://localhost:8000/api/clientes/delete/${numeroDocumentoRef.current.value}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                // 'Authorization': `Bearer ${token}`
                 
             }
         }).then(res => res.json()).then(data => {
-
-            if (data.success == false) {
-                showAlertDanger(data);
-                return;
-            }
             
             cleanInputs();
-            showAlertSuccess(data);
+            alertRef.current.classList.remove('d-none', 'alert-danger');
+            alertRef.current.classList.add('alert-info', 'd-block');
+            alertRef.current.textContent = data.message;
             setClienteFound(null);
             setMode('create');
+            // Desplazarse al inicio de la vista
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => {
+                alertRef.current.classList.add('d-none');
+            }, 3000);
+
         });
-    
+    }
     }
 
     /*metodo para obtener los datos de la api consultar profesiones , tipoDocumentos*/
@@ -194,31 +245,36 @@ export const ClienteView = () => {
 
     }
 
+
+    
+
+
     return (
         <>
             
-            <section className="background-radial-gradient overflow-lg-hidden vh-160">
+            <section className="background-radial-gradient overflow-lg-hidden h-100%">
                 <div className="container-fluid d-flex align-items-center justify-content-center overflow-auto">
                     <div className="container_formulario_request mb-4 mb-sm-O ">
-                        <div className="alert alert-info d-none" role="alert" ref={alertRef}></div>
+                    <div className="alert alert-info d-none" role="alert" ref={alertRef}></div>
+
                         <div className="container_formulario_text">
                             <div className="text_info d-none d-lg-block">
                                 <h1 className="my-5 display-5 fw-bold ls-tight">
                                     CRM para Centros Comerciales <br />
-                                    <span style={{ color: 'hsl(218, 81%, 75%)' }}>Para Registrar tus Compras</span>
+                                   
                                 </h1>
                                 <p className="mb-4 opacity-70">
                                     {/* Texto opcional */}
                                 </p>
                             </div>
 
-                            <div className="col-lg-6 col-12 mb-5 mb-lg-0 mt-lg-3 mt-4">
+                            <div className="col-lg-6 col-md-9 mb-4 mb-lg-0 mt-lg-3 mt-4 h-100">
                                 <div id="radius-shape-1" className="position-absolute shadow-8-strong d-none d-lg-block"></div>
                                 <div id="radius-shape-2" className="position-absolute shadow-8-strong d-none d-lg-block"></div>
                                 <div className="alert alert-info d-none" role="alert" ref={alertRef}></div>
 
                                 <div className="card bg-glass custom-form mt-5" style={{ borderRadius: '26px' }}>
-                                    <div className="card-body px-4 py-4 px-md-5">
+                                    <div className="card-body px-4 py-1 px-md-5">
                                         <h1 style={{ textAlign: 'center' }}>Registro Cliente</h1>
                                         <form onSubmit={handleSubmit}>
                                             {/* formulario  */}
@@ -386,10 +442,10 @@ export const ClienteView = () => {
                                                     </div>
                                                     <div className="row justify-content-around my-2">
                                                         <div className="col-6 col-sm-3 d-flex justify-content-center">
-                                                            <input className="btn-save btn-lg mb-2" type="submit" value="Registrar" />
+                                                            <input className="btn-consultar btn-sm mb-2" type="button" value="CONSULTAR" onClick={handleSearchCliente} />
                                                         </div>
                                                         <div className="col-6 col-sm-3 d-flex justify-content-center">
-                                                            <input className="btn-consultar btn-lg mb-2" type="button" value="Consultar" onClick={handleSearchCliente} />
+                                                            <input className="btn-save btn-lg mb-2" type="submit" value="Registrar" />
                                                         </div>
                                                         <div className="col-6 col-sm-3 d-flex justify-content-center">
                                                             <input className="btn-limpiar  btn-lg mb-2" type="button" value="limpiar" onClick={cleanInputs} />
