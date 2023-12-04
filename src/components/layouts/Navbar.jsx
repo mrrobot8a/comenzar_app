@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import './css/cssNavbar/Navbar.css'
 
 export const Navbar = () => {
@@ -27,6 +27,20 @@ export const Navbar = () => {
         }
     };
 
+    //instanciamos el navigate para redireccionar ala diferentes pages
+    const go = useNavigate();
+    const logout = async () => {
+        Storage.removeUser();
+        Storage.removeToken();
+        Storage.clearStorage();
+        //mandamos la peticion de enpoint de logout
+        // await axios.post('/api/auth/logout', Storage.getToken('token'));
+        //redireccionamos al page login
+        go('/login');
+    }
+
+
+
     return (
         <>
 
@@ -43,7 +57,7 @@ export const Navbar = () => {
 
                     <div className="collapse navbar-collapse" id="navbarNav">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li className="nav-item dropdown">
+                            <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Configuracion
                                 </a>
@@ -54,7 +68,7 @@ export const Navbar = () => {
                             </li>
                             <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                  Gestionar Procesos
+                                    Gestionar Procesos
                                 </a>
                                 <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <Link className="nav-item text-decoration-none" to="/clientes">
@@ -82,10 +96,22 @@ export const Navbar = () => {
                                     Consultas
                                 </a>
                                 <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a className="dropdown-item" href="#">tickets asignados por campaña</a></li>
-                                <li><a className="dropdown-item" href="#">tickets por cliente</a></li>
-                                <li><a className="dropdown-item" href="#">campañas habilitadas</a></li>
-                                <li><a className="dropdown-item" href="#">facturas redimidas</a></li>
+                                    <li><a className="dropdown-item" href="#">tickets asignados por campaña</a></li>
+                                    <li><a className="dropdown-item" href="#">tickets por cliente</a></li>
+                                    <li><a className="dropdown-item" href="#">campañas habilitadas</a></li>
+                                    <li><a className="dropdown-item" href="#">facturas redimidas</a></li>
+                                    <Link className="nav-item text-decoration-none" to="/consultar-profesiones">
+                                        <span className="nav-link active">Consultar Profesiones</span>
+                                    </Link>
+                                    <Link className="nav-item text-decoration-none" to="/consultar-campañas">
+                                        <span className="nav-link active">Consultar Campañas</span>
+                                    </Link>
+                                    <Link className="nav-item text-decoration-none" to="/consultar-tiendas">
+                                        <span className="nav-link active">Consultar Tiendas</span>
+                                     </Link> 
+                                    <Link className="nav-item text-decoration-none" to="/tienda-estadistica">
+                                        <span className="nav-link active">estadistica por tienda</span>  
+                                    </Link>
                                 </ul>
                             </li>
                         </ul>
@@ -105,7 +131,7 @@ export const Navbar = () => {
                                 </ul>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
             </nav>

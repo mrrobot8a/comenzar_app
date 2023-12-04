@@ -11,8 +11,11 @@ import { RedimirFacturaView } from "./view/redmirFactura/RedimirFacturaView"
 import { ConsultarTickets } from "./view/ticket/ConsultarTickets"
 import { ProfesionView } from "./view/profesiones/ProfesionView"
 import { TiendaView } from "./view/Tienda/TiendaView"
-import { DocumentoView } from "./view/documento/DocumentoView"
-import { LoginView } from "./view/login/LoginView"
+import { ConsultarTiendas } from "./view/Tienda/ConsultarTiendas"
+import { ConsultarCampañas } from "./view/campaña/ConsultarCampañas"
+import { ConsultarProfesiones } from "./view/profesiones/consultarProfesiones"
+import { TiendaEstadistica } from "./view/Tienda/TiendaEstadistica"
+
 import { TicketsAsignados } from "./view/ticket/TicketsAsignados"
 
 
@@ -40,11 +43,16 @@ export const App = () => {
         <Route path="/home" element={<Home />}></Route>
         <Route path="/clientes" element={<ClienteView />}></Route>
         <Route path="/campañas" element={<CampañaView />}></Route>
+        <Route path="/consultar-campañas" element={<ConsultarCampañas/>}></Route>
         <Route path="/facturas" element={<FacturaView />}></Route>
         <Route path="/redimir-facturas" element={<RedimirFacturaView />}></Route>
         <Route path="/estado-cliente" element={<TicketsAsignados />}></Route>
         <Route path="/consultar-ticket" element={<ConsultarTickets />}></Route>
         <Route path="/tiendas" element={<TiendaView />}></Route>
+        <Route path="/tienda-estadistica" element={< TiendaEstadistica />}></Route>
+        <Route path="/consultar-tiendas" element={< ConsultarTiendas/>}></Route>
+        <Route path="/profesiones" element={<ProfesionView />}></Route>
+        <Route path="/consultar-profesiones" element={<ConsultarProfesiones />}></Route>
         <Route path="/*">"404 Not Found"</Route>
 
       </Routes>

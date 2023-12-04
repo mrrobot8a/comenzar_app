@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { CustomInput } from '../../components/global/CustomInput';
 import { CustomSelect } from '../../components/global/CustomSelect';
-import '../../components/cliente/css/cssClienteview.css';
+import '../factura/factura.css';
 import { Alerts } from '../../components/customHooks/Alerts';
 
 export const FacturaView = () => {
@@ -185,7 +185,7 @@ export const FacturaView = () => {
                                 </p>
                             </div>
 
-                            <div className="col-lg-6 col-12 mb-5 mb-lg-0 mt-lg-3 mt-4">
+                            <div className="col-lg-6 col-12 mb-5 mb-lg-0 mt-lg-3 mt-4" >
                                 <div id="radius-shape-1" className="position-absolute shadow-8-strong d-none d-lg-block"></div>
                                 <div id="radius-shape-2" className="position-absolute shadow-8-strong d-none d-lg-block"></div>
                                 <div className="alert alert-info d-none" role="alert" ref={alertRef}></div>
@@ -314,13 +314,13 @@ export const FacturaView = () => {
                                                     <div className="row justify-content-around my-2">
                                                         
                                                         <div className="col-12 col-sm-3 d-flex justify-content-center">
-                                                            <input className="btn-consultar btn-lg mb-2" type="button" value="Consultar Cliente" onClick={handleSearchCliente} />
+                                                            <input className="btn-consultar btn-sm mb-2" type="button" value="Consultar Cliente" onClick={handleSearchCliente} />
                                                         </div>
                                                         <div className="col-12 col-sm-3 d-flex justify-content-center">
-                                                            <input className="btn-save btn-lg mb-2" type="submit" value="Registrar Factura" />
+                                                            <input className="btn-save btn-sm mb-2 p-2" type="submit" value="Registrar Factura" />
                                                         </div>
                                                         <div className="col-12 col-sm-3 d-flex justify-content-center">
-                                                            <input className="btn-limpiar  btn-lg mb-2" type="button" value="limpiar Campos" onClick={cleanInputs} />
+                                                            <input className="btn-limpiar  btn-sm mb-2" type="button" value="limpiar Campos" onClick={cleanInputs} />
                                                         </div>
 
                                                     </div>

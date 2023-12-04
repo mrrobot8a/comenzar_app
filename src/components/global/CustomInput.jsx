@@ -34,15 +34,18 @@ export const CustomInput = ({ className,labelPlaceholder, idInput, type, value, 
     const regexPattern =
       idInput === 'formDate'
         ? /^\d{2}-\d{2}-\d{4}$/
+         : idInput == "formNombreCampaña" ?
+         /[^A-Za-zÑñÁáÉéÍíÓóÚú\s-#^0-9]/ 
         : idInput === 'formEmail'
         ? /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{4}$/
         : idInput === 'formDireccion'
         ? /[^A-Za-zÑñÁáÉéÍíÓóÚú\s-#^0-9]/
-        : type === 'text'
-        ? /[^A-Za-zÑñÁáÉéÍíÓóÚú\s]/
         : idInput === 'formContraseña'
         ? /[^A-Za-zÑñÁáÉéÍíÓóÚú\s-#^0-9]/
-        : /[^0-9]/;
+        : type === 'text'
+        ? /[^A-Za-zÑñÁáÉéÍíÓóÚú\s]/        
+        :/[^0-9]/ 
+      
 
     
 
