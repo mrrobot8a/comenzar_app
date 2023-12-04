@@ -18,7 +18,8 @@ export const RedimirFacturaView = () => {
     const campanaRef = useRef();
 
     const { alertRef, showAlertDanger, showAlertSuccess } = Alerts();
-
+    const [cliente, setCliente] = useState({ nombre: '', apellidos: '' });
+    
     function handleSearchClient() {
 
         fetch(`http://localhost:8000/api/facturas/show/cliente/${numeroDocumentoRef.current.value}`, {
