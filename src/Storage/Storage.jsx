@@ -1,3 +1,4 @@
+import React from 'react';
 
 export const Storage = {
 
@@ -43,46 +44,45 @@ export const Storage = {
 
     // //token & usuario
 
-    // getToken() {
-    //    const token = window.localStorage.getItem('token');
-    //    if (!token) {
-    //        return null;
-    //    }
+    getToken() {
+       const token = window.localStorage.getItem('token');
+       if (!token) {
+           return null;
+       }
 
-    //     return JSON.parse(token);
-    // },
-    // getUser() {
-    //     const user = window.localStorage.getItem('user');
-    //     if (!user) {
-    //         return null;
-    //     }
+        return token;
+    },
+    getUser() {
+        const user = window.localStorage.getItem('user');
+        if (!user) {
+            return null;
+        }
 
-    //     return JSON.parse(user);
-    // },
+        return JSON.parse(user);
+    },
         
 
-    // setToken(token) {
+    setToken(token) {
 
-    //     window.localStorage.setItem('token', token);
-    // },
-    // setUser(user) {
-    //     window.localStorage.setItem('user', user);
-    // },
+        window.localStorage.setItem('token', token);
+    },
+    setUser(user) {
+        window.localStorage.setItem('user', JSON.stringify(user));
+    },
 
-    // removeToken() {
-    //     window.localStorage.removeItem('token');
-    // },
-    // removeUser() {
-    //     window.localStorage.removeItem('user');
-    // },
+    removeToken() {
+        window.localStorage.removeItem('token');
+    },
+    removeUser() {
+        window.localStorage.removeItem('user');
+    },
 
-    // clearStorage() {
-    //     window.localStorage.clear();
-    // }
-
-
+    clearStorage() {
+        window.localStorage.clear();
+    }
 
 
-}
 
-export default Storage;
+
+};
+

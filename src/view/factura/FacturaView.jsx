@@ -316,11 +316,11 @@ export const FacturaView = () => {
                                                         <div className="col-12 col-sm-3 d-flex justify-content-center">
                                                             <input className="btn-consultar btn-sm mb-2" type="button" value="Consultar Cliente" onClick={handleSearchCliente} />
                                                         </div>
-                                                        <div className="col-12 col-sm-3 d-flex justify-content-center">
+                                                        <div className="col-12 col-sm-3 col-md-4 d-flex justify-content-center">
                                                             <input className="btn-save btn-sm mb-2 p-2" type="submit" value="Registrar Factura" />
                                                         </div>
                                                         <div className="col-12 col-sm-3 d-flex justify-content-center">
-                                                            <input className="btn-limpiar  btn-sm mb-2" type="button" value="limpiar Campos" onClick={cleanInputs} />
+                                                            <input className="btn-limpiar  btn-mb mb-2" type="button" value="limpiar Campos" onClick={cleanInputs} />
                                                         </div>
 
                                                     </div>

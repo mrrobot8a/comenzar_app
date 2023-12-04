@@ -12,7 +12,6 @@ export const RedimirFacturaView = () => {
     const [campanas, setCampanas] = useState([]);
     const [tickes, setTickets] = useState([]);
     const [valorARedimir, setValorARedimir] = useState(0);
-    const [cliente, setCliente] = useState({ numero_documento: '', nombre: '', apellidos: '', id: '' });
     const [facturas, setFacturas] = useState(null);
 
     const numeroDocumentoRef = useRef();
@@ -332,3 +331,8 @@ export const RedimirFacturaView = () => {
         </>
     );
 };
+
+<div className=" col-sm-12  col-lg-6 col-md-12 col-12 mb-5 mb-lg-0 mt-lg-3 mt-4 mb-4">
+
+
+</div>
