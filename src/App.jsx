@@ -39,7 +39,7 @@ export const App = () => {
       }
       
       <Routes>
-        <Route path="/login" element={<Login user={userAuth} setUserAuth={setUserAuth} isAllowed={!!userAuth} redirect="/home" />}></Route>
+        <Route path="/" element={<Login user={userAuth} setUserAuth={setUserAuth} isAllowed={!!userAuth} redirect="/home" />}></Route>
         <Route path="/home" element={<Home />}></Route>
         <Route path="/clientes" element={<ClienteView />}></Route>
         <Route path="/campañas" element={<CampañaView />}></Route>

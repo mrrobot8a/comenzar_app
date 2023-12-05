@@ -2,17 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { CustomInput } from '../../components/global/CustomInput';
 import { CustomSelect } from '../../components/global/CustomSelect';
 import '../../components/cliente/css/cssClienteview.css';
+import { Alerts } from '../../components/customHooks/Alerts';
 
 export const CampañaView = () => {
-    //
-    const [profesiones, setProfesiones] = useState([]);
-    const [tiposDocumentos, setTipoDocumentos] = useState([]);
-    
 
     const [clienteFound, setClienteFound] = useState(null);
-
     const [mode, setMode] = useState('create');
-    //
+
     const token = localStorage.getItem('token');
     const nombreCampaña = useRef();
     const valorCampaña = useRef();
@@ -20,24 +16,30 @@ export const CampañaView = () => {
     const fechaCaducidad = useRef();
     const campañaHabilitada = useRef();
     
-    const alertRef = useRef();
+    const {alertRef, showAlertDanger, showAlertSuccess} = Alerts();
+
+    const user = JSON.parse(localStorage.getItem("user"))
 
     //metodo crear cliente
     function handleSubmit(e) {
 
         e.preventDefault();
 
+        if(validateCreate() == false) return
+
         const campaña = {
             
-            user_id: 1
+            user_id: user.id,
+            nombre: nombreCampaña.current.value,
+            valor: valorCampaña.current.value,
+            fecha_inicio: fechaInicio.current.value,
+            fecha_caducidad: fechaCaducidad.current.value,
+            estado: campañaHabilitada.current.value == '' ? 0 : 1
         }
-
-        console.log(campaña)
-
-        const URL = mode == 'create' ? 'http://localhost:8000/api/campaña/store' : `http://localhost:8000/api/clientes/update/${clienteFound.numero_documento}`;
+        const URL = 'http://localhost:8000/api/campanas/store'
 
         fetch(URL, {
-            method: mode == 'create' ? 'POST' : 'PUT',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -47,40 +49,13 @@ export const CampañaView = () => {
         }).then(res => res.json()).then(data => {
 
             if (!data.success) {
-
-                alertRef.current.classList.remove('d-none', 'alert-info');
-                alertRef.current.classList.add('alert-danger');
-                alertRef.current.textContent = "Los datos introducidos son incorrectos, por favor verificarlos";
-                // Desplazarse al inicio de la vista
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                showAlertDanger(data);
                 return;
-
             }
-
-
-            alertRef.current.classList.remove('d-none', 'alert-danger');
-            alertRef.current.classList.add('alert-info', 'd-block');
-            alertRef.current.textContent = data.message;
-
-
-
-            setMode('create');
-
-
-            // Desplazarse al inicio de la vista
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
+            showAlertSuccess(data);
             cleanInputs();
-            setClienteFound(null);
-
-            setTimeout(() => {
-                alertRef.current.classList.add('d-none');
-            }, 3000);
 
         });
-
-
-
 
     }
 
@@ -89,45 +64,28 @@ export const CampañaView = () => {
 
         e.preventDefault();
 
+        if(validateSearch() == false) return
 
-
-        console.log(nombreCampaña.current.value);
-
-        fetch(`http://localhost:8000/api/campaña/BuscarCampaña/${nombreCampaña.current.value}`, {
-            method: 'GET',
+        fetch(`http://localhost:8000/api/campanas/search`, {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                // 'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`
 
-            }
+            },
+            body: JSON.stringify({
+                nombreCampana: nombreCampaña.current.value
+            })
         }).then(res => res.json()).then(data => {
-
-            // setMode('create');
 
             if (data.success == false) {
                 setClienteFound(null);
-                alertRef.current.classList.remove('d-none', 'alert-info');
-                alertRef.current.classList.add('alert-danger', 'd-block');
-                alertRef.current.textContent = data.message;
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-
+                showAlertDanger(data);
                 return;
             }
             setMode('update')
-
-            // Desplazarse al inicio de la vista
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            alertRef.current.classList.add('d-none', 'alert-info');
-            alertRef.current.classList.remove('alert-danger', 'd-block');
-            alertRef.current.textContent = data.message;
-
-            console.log(data.data);
-
+            showAlertSuccess(data);
             setClienteFound(data.data);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            // cleanInputs();
         });
 
     }
@@ -187,6 +145,22 @@ export const CampañaView = () => {
 
     }, [])
 
+    function validateCreate() {
+
+        if (nombreCampaña.current.value == '' || valorCampaña.current.value == '' || fechaInicio.current.value == '' || fechaCaducidad.current.value == '') {
+            showAlertDanger({ 'message': 'Por favor digite los campos obligatorios' });
+            return false;
+        }
+    }
+
+    function validateSearch() {
+
+        if (nombreCampaña.current.value == '') {
+            showAlertDanger({ 'message': 'Por favor digite el nombre de la campana' });
+            return false;
+        }
+    }
+
 
     function cleanInputs() {
         setClienteFound(null);
@@ -200,7 +174,7 @@ export const CampañaView = () => {
         valorCampaña.current.clearInputField();
         fechaInicio.current.clearInputField();
         fechaCaducidad.current.clearInputField();
-        campañaHabilitada.current.clearInputField();
+        campañaHabilitada.current.checked = false;
     }
 
 
@@ -245,13 +219,7 @@ export const CampañaView = () => {
                                                                 <label className="form-label" htmlFor="form3Example3">
                                                                     Nombre de la campaña
                                                                 </label>
-                                                                <CustomInput
-                                                                    labelPlaceholder="nombre campaña"
-                                                                    idInput="formNombreCampaña"
-                                                                    type="text"
-                                                                    elementReferenced={nombreCampaña}
-                                                                    value={clienteFound ? clienteFound.numero_documento : ''}
-                                                                />
+                                                                <input type="text" className='form-control' ref={nombreCampaña}/>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -266,13 +234,7 @@ export const CampañaView = () => {
                                                                 <label className="form-label" htmlFor="form3Example2">
                                                                     Valor del ticket
                                                                 </label>
-                                                                <CustomInput
-                                                                    labelPlaceholder="N°999"
-                                                                    idInput="formValorTicket"
-                                                                    type="tel"
-                                                                    elementReferenced={valorCampaña}
-                                                                    value={clienteFound ? clienteFound.mascotas : ''}
-                                                                />
+                                                                <input type="text" className='form-control' ref={valorCampaña} value={clienteFound ? clienteFound.valor : ''}/>
                                                             </div>
                                                         </div>
                                                         <div className="col-md-6 d-flex align-items-center flex-direction-column justify-content-left p-2">
@@ -280,13 +242,7 @@ export const CampañaView = () => {
                                                             <label className="form-label m-2" htmlFor="form3Example1">
                                                                 campaña habilitada
                                                             </label>
-                                                            <CustomInput
-                                                                className={"form-check-input"}
-                                                                idInput="formHijos"
-                                                                type="checkbox"
-                                                                elementReferenced={campañaHabilitada}
-                                                                value={clienteFound ? clienteFound.hijos : ''}
-                                                            />
+                                                            <input type="checkbox" className="form-check-input" ref={campañaHabilitada} checked={clienteFound ? clienteFound.estado : ''}/>
 
                                                         </div>
                                                     </div>
@@ -296,12 +252,7 @@ export const CampañaView = () => {
                                                                 <label className="form-label" htmlFor="form3Example3">
                                                                     Fecha de inicio
                                                                 </label>
-                                                                <CustomInput
-                                                                    idInput="formDate"
-                                                                    type="date"
-                                                                    elementReferenced={fechaInicio}
-                                                                    value={clienteFound ? clienteFound.fecha_nacimiento : ''}
-                                                                />
+                                                                <input type="date" className="form-control" ref={fechaInicio} value={clienteFound ? clienteFound.fecha_inicio : ''}/>
                                                             </div>
                                                         </div>
                                                         <div className="col-md-6 mb-4">
@@ -309,12 +260,7 @@ export const CampañaView = () => {
                                                                 <label className="form-label" htmlFor="form3Example3">
                                                                     Fecha de caducidad
                                                                 </label>
-                                                                <CustomInput
-                                                                    idInput="formDate"
-                                                                    type="date"
-                                                                    elementReferenced={fechaCaducidad}
-                                                                    value={clienteFound ? clienteFound.fecha_nacimiento : ''}
-                                                                />
+                                                                <input type="date" className="form-control" ref={fechaCaducidad} value={clienteFound ? clienteFound.fecha_caducidad : ''}/>
                                                             </div>
                                                         </div>
                                                     </div>

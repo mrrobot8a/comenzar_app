@@ -10,7 +10,6 @@ export const TiendaView = () => {
     const codigoRef = useRef();
 
     const token = localStorage.getItem('token');
-
     const user = JSON.parse(localStorage.getItem("user"))
 
     function handleSubmit(e) {
@@ -125,12 +124,7 @@ export const TiendaView = () => {
         if(nombreRef.current.value == "" || codigoRef.current.value == "")
         {
 
-            alertRef.current.classList.remove('d-none', 'alert-info');
-            alertRef.current.classList.add('alert-danger');
-            alertRef.current.textContent = "Los datos introducidos son incorrectos, por favor verificarlos";
-            setTimeout(() => {
-                alertRef.current.classList.add('d-none');
-            }, 3000);
+            showAlertDanger({'message': 'Por favor digite los campos obligatorios'});
             return false;
         }
     }
@@ -139,13 +133,7 @@ export const TiendaView = () => {
     {
         if(codigoRef.current.value === "")
         {
-            
-            alertRef.current.classList.remove('d-none', 'alert-info');
-            alertRef.current.classList.add('alert-danger');
-            alertRef.current.textContent = "Los datos introducidos son incorrectos, por favor verificarlos";
-            setTimeout(() => {
-                alertRef.current.classList.add('d-none');
-            }, 3000);
+            showAlertDanger({'message': 'Por favor digite el codigo de la tienda'});
             return false;
         }
     }

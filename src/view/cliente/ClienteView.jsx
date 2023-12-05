@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { CustomInput } from '../../components/global/CustomInput';
 import { CustomSelect } from '../../components/global/CustomSelect';
 import '../cliente/Cliente.css';
+import { Alerts } from '../../components/customHooks/Alerts';
 
 export const ClienteView = () => {
 
@@ -10,11 +11,9 @@ export const ClienteView = () => {
     
     const [profesiones, setProfesiones] = useState([]);
     const [tiposDocumentos, setTipoDocumentos] = useState([]);
-
     const [clienteFound, setClienteFound] = useState(null);
-
     const [mode, setMode] = useState('create');
-    
+
     const token = localStorage.getItem('token');
 
     const profesionRef = useRef();
@@ -28,13 +27,16 @@ export const ClienteView = () => {
     const hijosRef = useRef();
     const numeroDocumentoRef = useRef();
     const mascotasRef = useRef();
-    const alertRef = useRef();
+
+    const { alertRef, showAlertDanger, showAlertSuccess } = Alerts();
 
     
     //metodo crear cliente
     function handleSubmit(e) {
 
         e.preventDefault();
+
+        if(validateCreate() == false) return
 
         const cliente = {
             profesion_id: profesionRef.current.value,
@@ -103,7 +105,7 @@ export const ClienteView = () => {
 
         e.preventDefault();
  
-      
+      if(validateSearch() == false) return
 
         console.log(numeroDocumentoRef.current.value);
         fetch(`http://localhost:8000/api/clientes/show/${numeroDocumentoRef.current.value}`, {
@@ -115,32 +117,15 @@ export const ClienteView = () => {
             }
         }).then(res => res.json()).then(data => {
 
-            // setMode('create');
-
             if (data.success == false) {
                 setClienteFound(null);
-                alertRef.current.classList.remove('d-none', 'alert-info');
-                alertRef.current.classList.add('alert-danger', 'd-block');
-                alertRef.current.textContent = data.message;
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-               
+                showAlertDanger(data);
                 return;
             }
             setMode('update')
 
-            // Desplazarse al inicio de la vista
-             window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            alertRef.current.classList.add('d-none', 'alert-info');
-            alertRef.current.classList.remove('alert-danger', 'd-block');
-            alertRef.current.textContent = data.message;
-
-            console.log(data.data);
-
+            showAlertSuccess(data);
             setClienteFound(data.data);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            // cleanInputs();
         });
 
     }
@@ -148,14 +133,8 @@ export const ClienteView = () => {
     //metodo para eliminar un usuario
     function handleDestroy()
     {
-        if (clienteFound == null) {
-            // Desplazarse al inicio de la vista
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            alertRef.current.classList.remove('d-none', 'alert-danger');
-            alertRef.current.classList.add('alert-info', 'd-block');
-            alertRef.current.textContent = "Digite el numero de documento del cliente a eliminar";
+        if(validateSearch() == false) return
 
-        }else{
         fetch(`http://localhost:8000/api/clientes/delete/${numeroDocumentoRef.current.value}`, {
             method: 'DELETE',
             headers: {
@@ -164,21 +143,19 @@ export const ClienteView = () => {
                 
             }
         }).then(res => res.json()).then(data => {
+
+            if (data.success == false) {
+                setClienteFound(null);
+                showAlertDanger(data);
+                return;
+            }
             
             cleanInputs();
-            alertRef.current.classList.remove('d-none', 'alert-danger');
-            alertRef.current.classList.add('alert-info', 'd-block');
-            alertRef.current.textContent = data.message;
+            showAlertSuccess(data);
             setClienteFound(null);
             setMode('create');
-            // Desplazarse al inicio de la vista
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setTimeout(() => {
-                alertRef.current.classList.add('d-none');
-            }, 3000);
-
         });
-    }
+    
     }
 
     /*metodo para obtener los datos de la api consultar profesiones , tipoDocumentos*/
@@ -246,7 +223,23 @@ export const ClienteView = () => {
     }
 
 
-    
+    function validateSearch()
+    {
+
+        if (numeroDocumentoRef.current.value == '') {
+            showAlertDanger({'message': 'Por favor digite el numero de documento'});
+            return false;
+        }
+    }
+
+    function validateCreate()
+    {
+
+        if (nombreRef.current.value == '' || apellidoRef.current.value == '' || emailRef.current.value == '' || numeroDocumentoRef.current.value == '' || fechaNacimientoRef.current.value == '') {
+            showAlertDanger({'message': 'Por favor digite los campos obligatorios'});
+            return false;
+        }
+    }
 
 
     return (
