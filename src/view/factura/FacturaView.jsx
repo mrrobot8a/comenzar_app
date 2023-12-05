@@ -15,7 +15,6 @@ export const FacturaView = () => {
     const [campañas, setCampañas] = useState([]);
     const [tiendas, setTiendas] = useState([]);
     const [clienteFound, setClienteFound] = useState(null);
-    const [mode, setMode] = useState('create');
 
     const tipoDocumentoRef = useRef();
     const nombreRef = useRef();
@@ -33,6 +32,8 @@ export const FacturaView = () => {
 
         e.preventDefault();
 
+        if(validateCreateFactura() == false) return
+
         const factura = {
             cliente_id: clienteFound.id,
             tienda_id: tiendasRef.current.value,
@@ -44,10 +45,10 @@ export const FacturaView = () => {
             user_id: user.id,
         }
 
-        const URL = mode == 'create' ? 'http://localhost:8000/api/facturas/store' : `http://localhost:8000/api/clientes/update/${clienteFound.numero_documento}`;
+        const URL = `http://localhost:8000/api/facturas/store`;
 
         fetch(URL, {
-            method: mode == 'create' ? 'POST' : 'PUT',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -62,7 +63,6 @@ export const FacturaView = () => {
             }
             
             showAlertSuccess(data);
-            setMode('create');
             setClienteFound(null);
             cleanInputs();
 
@@ -73,6 +73,8 @@ export const FacturaView = () => {
     function handleSearchCliente(e) {
 
         e.preventDefault();
+
+        if(validateSearchCliente() == false) return
 
         fetch(`http://localhost:8000/api/clientes/show/${numeroDocumentoRef.current.value}`, {
             method: 'GET',
@@ -88,7 +90,6 @@ export const FacturaView = () => {
                 showAlertDanger(data);
                 return;
             }
-            setMode('create')
             showAlertSuccess(data);
             setClienteFound(data.data);
         });
@@ -166,6 +167,29 @@ export const FacturaView = () => {
 
     }
 
+    function validateSearchCliente() {
+
+        if (numeroDocumentoRef.current.value == '') {
+            showAlertDanger({ 'message': 'Por favor digite el numero de documento.' });
+            return false;
+        }
+    }
+
+
+    function validateCreateFactura() {
+
+        if (clienteFound == null) {
+            showAlertDanger({ 'message': 'Por favor seleccione un cliente primero.' });
+            return false;
+        }
+
+        if (numeroDocumentoRef.current.value == '' || valorFacturaRef.current.value == '' || numero_factura.current.value == '' || tiendasRef.current.value == '' || campañasRef.current.value == '') {
+            showAlertDanger({ 'message': 'Por favor digite todos los datos obligatorios.' });
+            return false;
+        }
+    }
+
+
 
     return (
         <>
@@ -200,7 +224,7 @@ export const FacturaView = () => {
                                                         <div className="col-md-6 mb-4">
                                                             <div className="form-group">
                                                                 <label className="form-label" htmlFor="form3Example4">
-                                                                    Tipo de documento
+                                                                    Tipo de documento*
                                                                 </label>
                                                                 <CustomSelect
                                                                     options={tiposDocumentos}
@@ -212,7 +236,7 @@ export const FacturaView = () => {
                                                         <div className="col-md-6 mb-4">
                                                             <div className="form-outline">
                                                                 <label className="form-label" htmlFor="form3Example3">
-                                                                    Numero de documento
+                                                                    Numero de documento*
                                                                 </label>
                                                                 <CustomInput
                                                                     idInput="formNumeroDocumento"
@@ -255,7 +279,7 @@ export const FacturaView = () => {
                                                     <div className="col-md-12 mb-4">
                                                         <div className="form-outline">
                                                             <label className="form-label" htmlFor="form3Example3">
-                                                                Campaña
+                                                                Campaña*
                                                             </label>
                                                             <CustomSelect
                                                                 options={campañas}
@@ -270,7 +294,7 @@ export const FacturaView = () => {
                                                     <div className="col-md-12 mb-4">
                                                         <div className="form-group">
                                                             <label className="form-label" htmlFor="form3Example4">
-                                                                Tienda
+                                                                Tienda*
                                                             </label>
                                                             <CustomSelect
                                                                 options={tiendas}
@@ -284,7 +308,7 @@ export const FacturaView = () => {
                                                         <div className="col-md-6 lg-md-12 mb-4">
                                                             <div className="form-outline">
                                                                 <label className="form-label" htmlFor="form3Example1">
-                                                                    Numero factura
+                                                                    Numero factura*
                                                                 </label>
                                                                 <CustomInput
                                                                     idInput="formNumerofactura"
@@ -299,7 +323,7 @@ export const FacturaView = () => {
 
                                                             <div className="form-outline">
                                                                 <label className="form-label" htmlFor="form3Example2">
-                                                                    Valor factura
+                                                                    Valor factura*
                                                                 </label>
                                                                 <CustomInput
                                                                     idInput="formValorFactura"

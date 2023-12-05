@@ -1,13 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { CustomInput } from '../../components/global/CustomInput';
-import { CustomSelect } from '../../components/global/CustomSelect';
+import React, { useEffect, useRef } from 'react';
 import '../../components/cliente/css/cssClienteview.css';
 import { Alerts } from '../../components/customHooks/Alerts';
 
 export const CampañaView = () => {
-
-    const [clienteFound, setClienteFound] = useState(null);
-    const [mode, setMode] = useState('create');
 
     const token = localStorage.getItem('token');
     const nombreCampaña = useRef();
@@ -79,50 +74,43 @@ export const CampañaView = () => {
         }).then(res => res.json()).then(data => {
 
             if (data.success == false) {
-                setClienteFound(null);
                 showAlertDanger(data);
                 return;
             }
-            setMode('update')
             showAlertSuccess(data);
-            setClienteFound(data.data);
+            valorCampaña.current.value = data.data.valor
+            fechaInicio.current.value = data.data.fecha_inicio
+            fechaCaducidad.current.value = data.data.fecha_caducidad
+            campañaHabilitada.current.checked = data.data.estado == 1 ? true : false
         });
 
     }
 
     //metodo para eliminar un usuario
-    function handleDestroy() {
-        if (clienteFound == null) {
-            // Desplazarse al inicio de la vista
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            alertRef.current.classList.remove('d-none', 'alert-danger');
-            alertRef.current.classList.add('alert-info', 'd-block');
-            alertRef.current.textContent = "Digite el numero de documento del cliente a eliminar";
+    function handleDestroy() 
+    {
 
-        } else {
-            fetch(`http://localhost:8000/api/clientes/delete/${clienteFound.numero_documento}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // 'Authorization': `Bearer ${token}`
+        if(validateSearch() == false) return
 
-                }
-            }).then(res => res.json()).then(data => {
-
-                cleanInputs();
-                alertRef.current.classList.remove('d-none', 'alert-danger');
-                alertRef.current.classList.add('alert-info', 'd-block');
-                alertRef.current.textContent = data.message;
-                setClienteFound(null);
-                setMode('create');
-                // Desplazarse al inicio de la vista
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                setTimeout(() => {
-                    alertRef.current.classList.add('d-none');
-                }, 3000);
-
-            });
-        }
+        fetch(`http://localhost:8000/api/campanas/destroy`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                nombreCampana: nombreCampaña.current.value
+            })
+        }).then(res => res.json()).then(data => {
+            if(data.success == false)
+            {
+                showAlertDanger(data);
+                return;
+            }
+            showAlertSuccess(data);
+            cleanInputs();
+        });
+    
     }
 
     /*metodo para obtener los datos de la api consultar profesiones , tipoDocumentos*/
@@ -156,30 +144,19 @@ export const CampañaView = () => {
     function validateSearch() {
 
         if (nombreCampaña.current.value == '') {
-            showAlertDanger({ 'message': 'Por favor digite el nombre de la campana' });
+            showAlertDanger({ 'message': 'Por favor digite el nombre de la campaña.' });
             return false;
         }
     }
 
 
     function cleanInputs() {
-        setClienteFound(null);
         nombreCampaña.current.value = '';
         valorCampaña.current.value = '';
         fechaInicio.current.value = null;
         fechaCaducidad.current.value = null;
-        campañaHabilitada.current.value = false;
-        
-        nombreCampaña.current.clearInputField();
-        valorCampaña.current.clearInputField();
-        fechaInicio.current.clearInputField();
-        fechaCaducidad.current.clearInputField();
         campañaHabilitada.current.checked = false;
     }
-
-
-
-
 
     return (
         <>
@@ -234,7 +211,7 @@ export const CampañaView = () => {
                                                                 <label className="form-label" htmlFor="form3Example2">
                                                                     Valor del ticket
                                                                 </label>
-                                                                <input type="text" className='form-control' ref={valorCampaña} value={clienteFound ? clienteFound.valor : ''}/>
+                                                                <input type="text" className='form-control' ref={valorCampaña}/>
                                                             </div>
                                                         </div>
                                                         <div className="col-md-6 d-flex align-items-center flex-direction-column justify-content-left p-2">
@@ -242,7 +219,7 @@ export const CampañaView = () => {
                                                             <label className="form-label m-2" htmlFor="form3Example1">
                                                                 campaña habilitada
                                                             </label>
-                                                            <input type="checkbox" className="form-check-input" ref={campañaHabilitada} checked={clienteFound ? clienteFound.estado : ''}/>
+                                                            <input type="checkbox" className="form-check-input" ref={campañaHabilitada}/>
 
                                                         </div>
                                                     </div>
@@ -252,7 +229,7 @@ export const CampañaView = () => {
                                                                 <label className="form-label" htmlFor="form3Example3">
                                                                     Fecha de inicio
                                                                 </label>
-                                                                <input type="date" className="form-control" ref={fechaInicio} value={clienteFound ? clienteFound.fecha_inicio : ''}/>
+                                                                <input type="date" className="form-control" ref={fechaInicio}/>
                                                             </div>
                                                         </div>
                                                         <div className="col-md-6 mb-4">
@@ -260,7 +237,7 @@ export const CampañaView = () => {
                                                                 <label className="form-label" htmlFor="form3Example3">
                                                                     Fecha de caducidad
                                                                 </label>
-                                                                <input type="date" className="form-control" ref={fechaCaducidad} value={clienteFound ? clienteFound.fecha_caducidad : ''}/>
+                                                                <input type="date" className="form-control" ref={fechaCaducidad}/>
                                                             </div>
                                                         </div>
                                                     </div>

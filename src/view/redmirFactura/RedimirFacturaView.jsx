@@ -15,12 +15,16 @@ export const RedimirFacturaView = () => {
     const [facturas, setFacturas] = useState(null);
 
     const numeroDocumentoRef = useRef();
+    const nombreRef = useRef();
+    const apellidoRef = useRef();
     const campanaRef = useRef();
 
     const { alertRef, showAlertDanger, showAlertSuccess } = Alerts();
     const [cliente, setCliente] = useState({ nombre: '', apellidos: '' });
     
     function handleSearchClient() {
+
+        if(validateSearchCliente() == false) return
 
         fetch(`http://localhost:8000/api/facturas/show/cliente/${numeroDocumentoRef.current.value}`, {
             method: 'GET',
@@ -38,6 +42,9 @@ export const RedimirFacturaView = () => {
                 }
                 const { data: cliente } = data;
                 setCliente(cliente);
+                nombreRef.current.value = cliente.nombre;
+                apellidoRef.current.value = cliente.apellidos;
+
                 showAlertSuccess(data);
 
             }).catch(error => console.log(error));
@@ -45,6 +52,8 @@ export const RedimirFacturaView = () => {
 
     function handleSearchFacturas() {
 
+        if(validateSearchFacturas() == false) return
+        
         const numero_documento = numeroDocumentoRef.current.value;
         const campaña_id = campanaRef.current.value;
 
@@ -112,6 +121,8 @@ export const RedimirFacturaView = () => {
 
     function handleRedimirFacturas() 
     {
+        if(validateSearchFacturas() == false) return
+
         const campaña_id = campanaRef.current.value;
         const cliente_id = cliente.id;
 
@@ -139,10 +150,41 @@ export const RedimirFacturaView = () => {
                 }
 
                 setTickets(data.ticketsRedimidos);
-                handleSearchFacturas()
+                handleSearchFacturas();
                 showAlertSuccess(data);
+                cleanInputs();
             })
     }
+
+    function validateSearchCliente() {
+
+        if (numeroDocumentoRef.current.value == '') {
+            showAlertDanger({ 'message': 'Por favor digite el numero de documento.' });
+            return false;
+        }
+    }
+
+    function validateSearchFacturas()
+    {
+
+        if (cliente.nombre == '' || cliente.apellidos == '') {
+            showAlertDanger({ 'message': 'Por favor seleccione un cliente primero.' })
+            return false
+        }
+    }
+
+    function cleanInputs() 
+    {
+        nombreRef.current.value = '';
+        apellidoRef.current.value = '';
+        numeroDocumentoRef.current.value = '';
+
+        // nombreRef.current.clearInputField();
+        // apellidoRef.current.clearInputField();
+        // numeroDocumentoRef.current.clearInputField();
+
+    }
+
 
     /*metodo para obtener los datos de la api consultar profesiones , tipoDocumentos*/
     useEffect(() => {
@@ -204,7 +246,7 @@ export const RedimirFacturaView = () => {
                                                         <label className="form-label" htmlFor="form3Example1">
                                                             Nombres completo
                                                         </label>
-                                                        <input type="text" className='form-control' value={cliente.nombre} />
+                                                        <input type="text" className='form-control' ref={nombreRef}/>
                                                     </div>
                                                 </div>
                                                 <div className="col-md-6 mb-4">
@@ -212,7 +254,7 @@ export const RedimirFacturaView = () => {
                                                         <label className="form-label" htmlFor="form3Example2">
                                                             Apellidos
                                                         </label>
-                                                        <input type="text" className='form-control' value={cliente.apellidos} />
+                                                        <input type="text" className='form-control' ref={apellidoRef}/>
                                                     </div>
                                                 </div>
                                             </div>
