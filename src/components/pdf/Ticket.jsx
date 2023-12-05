@@ -5,7 +5,7 @@ import logo from '../img/Unicentro-Valledupar-logo-512-lined.png';
 export const Ticket = {
   
   imprimirDirectamente(numerosTickets, nombreCliente, cedulaCliente) {
-    const pdf = new jsPDF();
+    const pdf = new jsPDF('p', 'mm', [80, 80]);
 
     const ticketWidth = 80;
     const ticketHeight = 100;

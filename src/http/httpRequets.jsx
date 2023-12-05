@@ -31,12 +31,15 @@ export const httpRequests = {
             body: JSON.stringify(params)
         }).then(async (response) => {
             res = await response.json();
-            show_alert(res.message, 'Bienvenio', 'success');
-
+            
             if (res.success && redir !== '') {
+                show_alert(res.message, 'Bienvenido', 'success');
                 setTimeout(() => {
                     window.location.href = redir;
                 }, 2000);
+            }else{
+                
+                show_alert(res.message, 'Error', 'error');
             }
 
         }).catch((errors) => {
