@@ -1,23 +1,24 @@
-import { Route, Routes } from "react-router-dom"
+import { Route, BrowserRouter, Routes } from "react-router-dom"
 import { Navbar } from "./components/layouts/Navbar"
 import { Login } from "./components/Login"
-import { Home } from "./components/Home"
+import { Home } from "./view/Home"
 import { useEffect, useState } from "react"
-import { Clientes } from "./components/Clientes"
 import { ClienteView } from "./view/cliente/ClienteView"
 import { CampañaView } from "./view/campaña/campañaView"
 import { FacturaView } from "./view/factura/FacturaView"
 import { RedimirFacturaView } from "./view/redmirFactura/RedimirFacturaView"
 import { ConsultarTickets } from "./view/ticket/ConsultarTickets"
 import { ProfesionView } from "./view/profesiones/ProfesionView"
-import { TiendaView } from "./view/Tienda/TiendaView"
-import { ConsultarTiendas } from "./view/Tienda/ConsultarTiendas"
+import { TiendaView } from "./view/tienda/TiendaView"
+import { ConsultarTiendas } from "./view/tienda/ConsultarTiendas"
 import { ConsultarCampañas } from "./view/campaña/ConsultarCampañas"
 import { ConsultarProfesiones } from "./view/profesiones/consultarProfesiones"
-import { TiendaEstadistica } from "./view/Tienda/TiendaEstadistica"
 
+import { ProtectedRoutes } from "./components/ProtectedRoutes/ProtectedRoutes"
 import { TicketsAsignados } from "./view/ticket/TicketsAsignados"
-
+import { TiendaEstadistica } from "./view/tienda/TiendaEstadistica"
+import { LoginView } from "./view/login/LoginView"
+import { ConsultarClientes } from "./view/cliente/ConsultarCiientes"
 
 export const App = () => {
 
@@ -29,15 +30,15 @@ export const App = () => {
 
   }, []);
 
-  // console.log(userAuth)
+  console.log(userAuth)
 
   return (
-    <div>
 
-      {
-        !!userAuth && <Navbar />
-      }
-      
+
+    <BrowserRouter>
+    
+       {userAuth && <Navbar />}
+       
       <Routes>
         <Route path="/" element={<Login user={userAuth} setUserAuth={setUserAuth} isAllowed={!!userAuth} redirect="/home" />}></Route>
         <Route path="/home" element={<Home />}></Route>
@@ -54,9 +55,9 @@ export const App = () => {
         <Route path="/profesiones" element={<ProfesionView />}></Route>
         <Route path="/consultar-profesiones" element={<ConsultarProfesiones />}></Route>
         <Route path="/*">"404 Not Found"</Route>
-
       </Routes>
-    </div>
+    </BrowserRouter>
+
 
   )
 }

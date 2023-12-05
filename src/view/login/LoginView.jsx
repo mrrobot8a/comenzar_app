@@ -3,14 +3,17 @@ import { Navigate } from "react-router-dom";
 import { CustomInput } from '../../components/global/CustomInput';
 import { CustomSelect } from '../../components/global/CustomSelect';
 import '../login/login.css'
+import { Storage } from '../../Storage/Storage';
+
+import { httpRequests } from '../../http/httpRequets';
 
 export const LoginView = ({ setUserAuth, isAllowed, redirect }) => {
-    
+
     const emailRef = useRef();
     const passwordRef = useRef();
     const alertRef = useRef();
 
-    function handleSumibit(e) {
+    async function handleSumibit(e) {
 
         e.preventDefault();
 
@@ -21,50 +24,46 @@ export const LoginView = ({ setUserAuth, isAllowed, redirect }) => {
             email,
             password
         };
+        const headers = {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Access-Control-Allow-Origin": "*"
+        }
+
+        await httpRequests.sendRequest('POST', credentials, 'http://localhost:8000/api/auth/login',
+            '/home', false, '').then((res) => {
+                if (res.success) {
+                    Storage.set('token', res.authorization);
+                    Storage.setUser(res.user);
+                }
+            })
 
 
-        setUserAuth(credentials);
-        localStorage.setItem("token", '123456789');
-        localStorage.setItem("user", JSON.stringify(credentials));
-        //no se maneja el token
-        // const requestOptions = {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //         "Accept": "application/json",
-        //         "Access-Control-Allow-Origin": "*"
-        //     },
-        //     body: JSON.stringify(credentials),
-        // };
 
-        // fetch("http://localhost:8000/api/auth/login", requestOptions)
-        //     .then((response) => response.json())
-        //     .then(data => {
-        //         localStorage.setItem("token", data.authorization.token);
-        //         localStorage.setItem("user", JSON.stringify(data.user));
-        //         setUserAuth(data.user)
-        //     })
-        
+
+
     }
 
-   
 
 
-    if(isAllowed) return <Navigate to={redirect}/>
+
+    if (isAllowed) return <Navigate to={redirect} />
 
 
     return (
         <>
-            
+
             <section className="background-radial-gradient  d-flex align-items-center justify-content-center overflow-lg-hidden vh-100">
+                
                 <div className="container-fluid d-flex align-items-center justify-content-center overflow-auto">
                     <div className="container_formulario_request justify-content-center mb-4 mt-4 mb-sm-O ">
                         <div className="alert alert-info d-none" role="alert" ref={alertRef}></div>
                         <div className="container_formulario_text">
                             <div className="text_info d-none d-lg-block">
                                 <h1 className="my-5 display-5 fw-bold ls-tight">
-                                    CRM para Centros Comerciales <br />
                                     
+                                    CRM para Centros Comerciales <br />
+
                                 </h1>
                                 <p className="mb-4 opacity-70">
                                     {/* Texto opcional */}
@@ -72,7 +71,6 @@ export const LoginView = ({ setUserAuth, isAllowed, redirect }) => {
                             </div>
 
                             <div className="col-lg-6 col-12 mb-5 mb-lg-0 mt-lg-3 mt-4">
-                                <div id="radius-shape-1" className="position-absolute shadow-8-strong d-none d-lg-block"></div>
                                 <div id="radius-shape-2" className="position-absolute shadow-8-strong d-none d-lg-block"></div>
                                 <div className="alert alert-info d-none" role="alert" ref={alertRef}></div>
 
@@ -85,7 +83,7 @@ export const LoginView = ({ setUserAuth, isAllowed, redirect }) => {
                                                 <div className="col-md-12 mb-4">
 
                                                     <div className="row">
-                                                        
+
                                                         <div className="col-md-6 mb-4">
                                                             <div className="form-outline">
                                                                 <label className="form-label" htmlFor="form3Example1">
@@ -96,7 +94,7 @@ export const LoginView = ({ setUserAuth, isAllowed, redirect }) => {
                                                                     idInput="formEmail"
                                                                     type="email"
                                                                     elementReferenced={emailRef}
-                                                                    
+
                                                                 />
                                                             </div>
                                                         </div>
@@ -110,17 +108,18 @@ export const LoginView = ({ setUserAuth, isAllowed, redirect }) => {
                                                                     idInput="formContraseña"
                                                                     type="password"
                                                                     elementReferenced={passwordRef}
-                                                                   
+
+
                                                                 />
                                                             </div>
                                                         </div>
-                                                    </div>                                                 
-                                                   
-                                                    
+                                                    </div>
+
+
                                                     <div className="row justify-content-around my-2">
                                                         <div className="col-6 col-sm-6 d-flex justify-content-center">
-                                                            <input className="btn-save btn-lg mb-2" type="submit" value="INICIAR " />
-                                                        </div>                                                        
+                                                            <input className="btn-save btn-lg mb-2" type="submit" value="INICIAR" />
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

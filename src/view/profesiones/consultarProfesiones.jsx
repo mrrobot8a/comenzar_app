@@ -1,11 +1,16 @@
-import React from 'react';
+
 import logo from '../../components/img/Unicentro-Valledupar-logo-512-lined.png';
+import React, { useState, useEffect, useRef } from 'react';
+import { Storage } from '../../Storage/Storage';
+import {hide_alert, show_alert} from '../../components/customHooks/Alerts';
 
 import { GenerarpdfTablas } from '../../components/pdf/GenerarpdfTablas';
 
 
-
 export const ConsultarProfesiones = () => {
+
+
+    const [profesiones, setProfesiones] = useState([]);
 
     const handleImprimir = () => {
         GenerarpdfTablas.getpdfdeTabla('#tableProfesiones',
@@ -13,6 +18,41 @@ export const ConsultarProfesiones = () => {
 
 
     };
+
+    useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = Storage.getToken('token');
+        show_alert('Cargando', 'Cargando Profesiones', 'info');
+  
+        const response = await fetch("http://localhost:8000/api/profesiones/all-profesiones", {
+          method: 'GET',
+          headers: {
+            // 'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        hide_alert();
+  
+        if (!response.ok) {
+          throw new Error('Error al obtener los datos');
+        }
+  
+        const data = await response.json();
+        console.log(data.profesiones);
+        setProfesiones(data.profesiones);
+      } catch (error) {
+        console.error('Error:', error.message);
+       
+      } finally {
+       
+      }
+    };
+  
+    fetchData();
+  }, []);
+
+
 
     return (
         <section className="background-radial-gradient overflow-lg-hidden vh-100">
@@ -29,23 +69,12 @@ export const ConsultarProfesiones = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Abogado</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Administrador de empresas</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>Ingeniero de sistemas</td>
-                            </tr>
-
-                            <tr>
-                                <td>4</td>
-                                <td>Medico</td>
-                            </tr>
+                            {profesiones.map((profesion, index) => (
+                                <tr key={profesion.id}>
+                                    <th scope="row">{index + 1}</th>
+                                    <td>{profesion.nombre_profesion}</td>
+                                </tr>
+                            ))}                       
 
 
                         </tbody>

@@ -23,3 +23,5 @@ yarn-debug.log*
 yarn-error.log*
 src/j.jsx
 src/components/img/Comprobante de tu pago con Pse.pdf
+src/view/login/LoginViewV2.jsx
+src/components/global/Divinput.jsx

@@ -3,6 +3,7 @@ import jsPDF from 'jspdf';
 import logo from '../img/Unicentro-Valledupar-logo-512-lined.png';
 
 export const Ticket = {
+  
   imprimirDirectamente(numerosTickets, nombreCliente, cedulaCliente) {
     const pdf = new jsPDF();
 

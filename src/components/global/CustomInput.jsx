@@ -2,6 +2,7 @@ import React, { useState, useEffect, useImperativeHandle, forwardRef } from 'rea
 
 
 export const CustomInput = ({ className,labelPlaceholder, idInput, type, value, elementReferenced ,disabled}) => {
+  
   const [validCamposSoloTexto, setValueFieldInputText] = useState(value || '');
   const [mensajeError, setMensajeError] = useState('');
   const [tooltipVisible, setTooltipVisible] = useState(false);

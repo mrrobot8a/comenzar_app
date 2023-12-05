@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
+import { Storage } from '../../Storage/Storage';
 import './css/cssNavbar/Navbar.css'
 
 export const Navbar = () => {
@@ -16,6 +17,7 @@ export const Navbar = () => {
         return () => {
             window.removeEventListener('resize', handleResize);
         };
+
     }, []);
 
     const renderProfile = () => {
@@ -29,12 +31,11 @@ export const Navbar = () => {
 
     //instanciamos el navigate para redireccionar ala diferentes pages
     const go = useNavigate();
-    const logout = async () => {
-        Storage.removeUser();
+    function logout() {
         Storage.removeToken();
+        Storage.removeUser();
         Storage.clearStorage();
         //mandamos la peticion de enpoint de logout
-        // await axios.post('/api/auth/logout', Storage.getToken('token'));
         //redireccionamos al page login
         go('/login');
     }
@@ -66,52 +67,114 @@ export const Navbar = () => {
                                     <li><a className="dropdown-item" href="#">Registrar profesiones</a></li>
                                 </ul>
                             </li>
-                            <li className="nav-item dropdown">
+
+
+                            <li className="nav-item dropdown" style={{ whiteSpace: 'nowrap', }} >
                                 <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Gestionar Procesos
+                                    Gestion de Procesos
                                 </a>
                                 <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <Link className="nav-item text-decoration-none" to="/clientes">
-                                        <span className="nav-link active">Gestionar Clientes</span>
-                                    </Link>
-                                    <Link className="nav-item text-decoration-none" to="/tiendas">
-                                        <span className="nav-link active">Gestionar Tienda</span>
-                                    </Link>
-                                    <Link className="nav-item text-decoration-none" to="/campañas">
-                                        <span className="nav-link active">Gestionar Campaña</span>
-                                    </Link>
-                                    <Link className="nav-item text-decoration-none" to="/facturas">
-                                        <span className="nav-link active">Gestionar Facturas</span>
-                                    </Link>
-                                    <Link className="nav-item text-decoration-none" to="/redimir-facturas">
-                                        <span className="nav-link active">Redimir Facturas</span>
-                                    </Link>
-                                    <Link className="nav-item text-decoration-none" to="/estado-cliente">
-                                        <span className="nav-link active">Estado cliente</span>
-                                    </Link>
+
+                                    <li className='nav-item list-group-item list-group-item-action small-item d-flex align-items-center' style={{ height: '40px' }}>
+                                        <Link to="/clientes" className="nav-link active" style={{ fontSize: '15px', }}>
+                                            Gestionar Clientes
+                                        </Link>
+                                    </li>
+                                    <li className='nav-item list-group-item list-group-item-action small-item d-flex align-items-center' style={{ height: '40px' }}>
+                                        <Link to="/tiendas" className="nav-link active" style={{ fontSize: '15px', }}>
+                                            Gestionar Tienda
+                                        </Link>
+                                    </li>
+                                    <li className='nav-item list-group-item list-group-item-action small-item d-flex align-items-center' style={{ height: '40px' }}>
+                                        <Link to="/campañas" className="nav-link active" style={{ fontSize: '15px', }}>
+                                            Gestionar Campaña
+                                        </Link>
+                                    </li>
+                                    <li className='nav-item list-group-item list-group-item-action small-item d-flex align-items-center' style={{ height: '40px' }}>
+                                        <Link to="/facturas" className="nav-link active" style={{ fontSize: '15px', }}>
+                                            Gestionar Facturas
+                                        </Link>
+                                    </li>
+                                    <li className='nav-item list-group-item list-group-item-action small-item d-flex align-items-center' style={{ height: '40px' }}>
+                                        <Link to="/redimir-facturas" className="nav-link active" style={{ fontSize: '15px', }}>
+                                            Redimir Facturas
+                                        </Link>
+                                    </li>
+                                    <li className='nav-item list-group-item list-group-item-action small-item d-flex align-items-center' style={{ height: '40px' }}>
+                                        <Link to="/estado-cliente" className="nav-link active" style={{ fontSize: '15px', }}>
+                                            Estado Cliente
+                                        </Link>
+                                    </li>
+
+
+
+
                                 </ul>
                             </li>
-                            <li className="nav-item dropdown">
+                            <li className="nav-item dropdown" style={{ whiteSpace: 'nowrap', }} >
                                 <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Consultas
                                 </a>
                                 <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a className="dropdown-item" href="#">tickets asignados por campaña</a></li>
-                                    <li><a className="dropdown-item" href="#">tickets por cliente</a></li>
-                                    <li><a className="dropdown-item" href="#">campañas habilitadas</a></li>
-                                    <li><a className="dropdown-item" href="#">facturas redimidas</a></li>
-                                    <Link className="nav-item text-decoration-none" to="/consultar-profesiones">
-                                        <span className="nav-link active">Consultar Profesiones</span>
-                                    </Link>
-                                    <Link className="nav-item text-decoration-none" to="/consultar-campañas">
-                                        <span className="nav-link active">Consultar Campañas</span>
-                                    </Link>
-                                    <Link className="nav-item text-decoration-none" to="/consultar-tiendas">
-                                        <span className="nav-link active">Consultar Tiendas</span>
-                                     </Link> 
-                                    <Link className="nav-item text-decoration-none" to="/tienda-estadistica">
-                                        <span className="nav-link active">estadistica por tienda</span>  
-                                    </Link>
+
+                                    <li className='nav-item list-group-item list-group-item-action small-item d-flex align-items-center' style={{ height: '40px' }}>
+                                        <Link to="" className="nav-link active" style={{ fontSize: '15px', }}>
+                                            Facturas redimidas
+                                        </Link>
+                                    </li>
+                                    <li className='nav-item list-group-item list-group-item-action small-item d-flex align-items-center' style={{ height: '40px' }}>
+                                        <Link to="" className="nav-link active" style={{ fontSize: '15px', }}>
+                                            Tickets asignados por campaña
+                                        </Link>
+                                    </li>
+                                    <li className='nav-item list-group-item list-group-item-action small-item d-flex align-items-center' style={{ height: '40px' }}>
+                                        <Link to="" className="nav-link active" style={{ fontSize: '15px', }}>
+                                            Tickets asignados por cliente
+                                        </Link>
+                                    </li>
+                                    <li className='nav-item list-group-item list-group-item-action small-item d-flex align-items-center' style={{ height: '40px' }}>
+                                        <Link to="/tienda-estadistica" className="nav-link active" style={{ fontSize: '15px', }}>
+                                            Estadistica por tienda
+                                        </Link>
+                                    </li>
+
+
+
+
+                                </ul>
+                            </li>
+                            <li className="nav-item dropdown" style={{ whiteSpace: 'nowrap', }} >
+                                <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Reportes
+                                </a>
+                                <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                                    <li className='nav-item list-group-item list-group-item-action small-item d-flex align-items-center' style={{ height: '40px' }}>
+                                        <Link to="/consultar-profesiones" className="nav-link active" style={{ fontSize: '15px', }}>
+                                            Listar profesiones
+                                        </Link>
+                                    </li>
+                                    <li className='nav-item list-group-item list-group-item-action small-item d-flex align-items-center' style={{ height: '40px' }}>
+                                        <Link to="/consultar-campañas" className="nav-link active" style={{ fontSize: '15px', }}>
+                                            Listar Campañas
+                                        </Link>
+                                    </li>
+
+                                    <li className='nav-item list-group-item list-group-item-action small-item d-flex align-items-center' style={{ height: '40px' }}>
+                                        <Link to="/consultar-tiendas" className="nav-link active" style={{ fontSize: '15px', }}>
+                                            Listar Tiendas
+                                        </Link>
+                                    </li>
+                                    <li className='nav-item list-group-item list-group-item-action small-item d-flex align-items-center' style={{ height: '45px' }}>
+                                        <Link to="/consultar-clientes" className="nav-link active" style={{ fontSize: '15px', }}>
+                                            Listar Clientes
+                                        </Link>
+                                    </li>
+
+
+
+
+
                                 </ul>
                             </li>
                         </ul>
@@ -125,7 +188,7 @@ export const Navbar = () => {
                                         <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                                             <li><a className="dropdown-item" href="#">My profile</a></li>
                                             <li><a className="dropdown-item" href="#">Settings</a></li>
-                                            <li><a className="dropdown-item" href="#">Logout</a></li>
+                                            <li><a className="dropdown-item" onClick={logout} href="#">Logout</a></li>
                                         </ul>
                                     </li>
                                 </ul>
