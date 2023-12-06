@@ -1,0 +1,166 @@
+.text-muted {
+    font-size: 0.9rem;
+    color: #6c757d !important;
+    height: 1.5rem;
+}
+
+.background-radial-gradient {
+    height: fit-content;
+    background-color: hsl(218, 41%, 15%);
+    background-image: radial-gradient(100% 100% circle at 50% 0%,
+            hsl(218, 41%, 35%) 15%,
+            hsl(218, 41%, 30%) 35%,
+            hsl(218, 41%, 20%) 75%,
+            hsl(218, 41%, 19%) 80%,
+            transparent 100%),
+        radial-gradient(100% 100% circle at 100% 100%,
+            hsl(218, 41%, 45%) 15%,
+            hsl(218, 41%, 30%) 35%,
+            hsl(218, 41%, 20%) 75%,
+            hsl(218, 41%, 19%) 80%,
+            transparent 100%);
+}
+
+
+
+
+
+/* Estilos adicionales cuando el cursor pasa sobre el botón */
+input[type="submit"]:hover {
+    background-color: #dcdcdc;
+    /* Cambia el color de fondo al pasar sobre el botón */
+}
+
+/* boton perfl */
+.menuizque-container {
+    margin-right: 10px;
+}
+
+.container_formulario_request {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    padding-right: 20px;
+    justify-content: center;
+    align-items: center;
+    background-color: hsl(218, 41%, 15%);
+    overflow: hidden;
+}
+
+.container_formulario_text {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
+
+}
+
+.text_info {
+    width: 50%;
+    text-align: right;
+    padding-right: 20px;
+    /* Espaciado a la derecha para separar del formulario */
+}
+
+.containerbtnIniciar {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mensaje-error {
+    position: absolute;
+    top: -30px;
+    left: 0;
+    background-color: #ffcccc;
+    padding: 10px;
+    border: 1px solid #ff0000;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+
+#radius-shape-1 {
+    border-radius: 38% 62% 63% 37% / 70% 33% 67% 30%;
+    bottom: 0px;
+    right: 90px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(#44006b, #ad1fff);
+    overflow: hidden;
+}
+
+/*circulo  de abajo2*/
+#radius-shape-2 {
+    border-radius: 38% 62% 63% 37% / 70% 33% 67% 30%;
+    bottom: 0px;
+    right: 10px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(#44006b, #ad1fff);
+    overflow: hidden;
+}
+
+/* Agrega una regla específica para las listas en tu archivo de estilos CSS */
+ul,
+ol {
+    list-style-type: initial;
+    /* O el tipo de marcador que desees */
+}
+
+
+
+.menuizque {
+    margin-left: 100px;
+}
+
+/* .navbar>.container-fluid, .navbar>.container-lg, .navbar>.container-md, .navbar>.container-sm, .navbar>.container-xl, .navbar>.container-xxl {
+    display: flex;
+    flex-wrap: inherit;
+    align-items: center;
+    justify-content: space-between;
+    margin-right: 49px;
+} */
+
+
+/* Estilo específico para las listas de la barra de navegación desplegable */
+.navbar-nav .dropdown-menu,
+.navbar-nav .dropdown-menu li {
+    list-style-type: none;
+}
+
+.bg-glass {
+    background-color: hsla(0, 0%, 100%, 0.9) !important;
+    backdrop-filter: saturate(200%) blur(25px);
+}
+
+.my-5 {
+    color: hsl(218, 81%, 95%);
+}
+
+span {
+    color: hsl(218, 81%, 85%);
+}
+
+.btn-limpiar {
+
+    color: #FFFFFF;
+    background-color: #c1bcbc;
+}
+
+.btn-save {
+    color: #FFFFFF;
+    background-color: #4CAF50;
+}
+.btn-consultar {
+    color: #ffffff;
+    background-color: #63bbe8;
+}
+.btn-delete {
+    color: #FFFFFF;
+    background-color: #D32F2F;
+}
+
